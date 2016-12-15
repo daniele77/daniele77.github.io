@@ -1,3 +1,10 @@
+---
+layout: post
+title: My first post (test)
+published: true
+category: general
+tags: test
+---
 This is my very first post.
 
 ## This is a header 2
