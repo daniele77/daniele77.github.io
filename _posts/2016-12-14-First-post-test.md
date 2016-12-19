@@ -3,7 +3,7 @@ layout: post
 title: My first post (test)
 published: true
 category: general
-tags: test
+tags: [test, sandbox]
 ---
 This is my very first post.
 
