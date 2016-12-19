@@ -21,7 +21,6 @@ I keep studying the theory, principles and practice in software design and devel
 <!--
 [email@domain.com](mailto:email@domain.com)
 -->
-[email@domain.com](mailto:email@domain.com)
 
 <script language="JavaScript">
 var username = "wallaroolibrary";
