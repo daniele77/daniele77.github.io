@@ -1,6 +1,6 @@
 ---
 layout: post
-title: My first post (test)
+title: My first post
 published: true
 category: general
 tags: [test, sandbox]
@@ -9,7 +9,7 @@ This is my very first post.
 
 ## This is a header 2
 
-Now I want to add some code. 
+Now I want to add some code. I use triple backticks:
 
 ```c++
 // some code
@@ -24,6 +24,22 @@ int main()
   return 0;
 }
 ```
+
+I get the same output with this (using ```highlight c++``` and ```endhighlight```:
+
+{% highlight c++ %}
+// some code
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+  auto f = [](){ cout << "Hello, blogging world!\n"; }
+  f();
+  return 0;
+}
+{% endhighlight %}
 
 Let's see how it gets formatted...
 
