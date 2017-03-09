@@ -9,6 +9,9 @@ name: Daniele Pallastrelli
 # description: Senior C++ developer from Italy
 description: brain-driven design
 
+# For the copyright note
+author: Daniele Pallastrelli
+
 # URL of your avatar or profile pic (you could use your GitHub profile pic)
 avatar: https://avatars0.githubusercontent.com/u/5451767?v=3&s=460
 
@@ -54,7 +57,9 @@ baseurl: ""
 # !! You don't need to change any of the configuration flags below !!
 #
 
-permalink: /:title/
+# permalink: /:title/
+# the default:
+permalink: date
 
 # The release of Jekyll Now that you're using
 version: v1.2.0
