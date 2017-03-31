@@ -7,18 +7,20 @@ tags: [design, C++]
 ---
 
 Lately, I had to choose a C++ library to use for an industrial product I'm developing.
-I found what it seemed the best fit (according to some constraint I have), but a few choices of the author
-left me embarassed about the library interface. And not just me, considering that the issue tracker
-was filled with possible improvement of the interface.
+I found what it seemed the best fit (according to some constraint I had), 
+however some choices of the author left me bewildered about the library interface.
+And not just me, since in the issue tracker I found other suggestion to improve the interface.
 
-<p style="background-color:yellow;">disclaimer: è una bella e utilissima libreria, sto solo usandola come esempio per un discorso più ampio.</p>
+Let me be clear: that's a good and useful modern C++ library, that does what it claim to do.
+I'm just using it as an example to make some consideration for a broader point of view.
 
-Let's review some things that I had done in a different way.
+So, let's review some things that I had done in a different way.
 
 The library deals with a protocol, and the user have to specify the protocol version in every message
-he wants to send. The supported protocol versions are v. 1.0 and 1.1 (guess what protocol we're speaking about? :-)
-so, in the public interface, the author provides an `int` to set the version, where the valid values are `10` and `11`
-(checked at runtime with an `assert`).
+he wants to send (and this already could be improved).
+The supported protocol versions are v. 1.0 and 1.1 (guess what protocol we're speaking about? :-)
+so, in the public interface, the author provides an `int` to set the version,
+where the valid values are `10` and `11` (checked at runtime with an `assert`).
 
 It works. When you learn to use the library, you look at the examples that come with it,
 see something like this:
@@ -27,9 +29,9 @@ see something like this:
 msg.version = 11;
 {% endhighlight %}
 
-and you soon understand how it works.
-Everything's fine, then? Well yes, the library is usable, but the interface could be improved a bit, both
-in terms of readability and extensibility but, above all, to avoid bugs.
+and you understand immediately how it works.
+Everything's fine, then? Well yes, the library is usable, but the interface could be improved a bit, 
+in terms both of readability and extensibility but, above all, to avoid bugs.
 
 I suggested using an `enum class` instead of a `int`. Something like that:
 
@@ -37,7 +39,7 @@ I suggested using an `enum class` instead of a `int`. Something like that:
 enum class Version { http_1_0, http_1_1 };
 {% endhighlight %}
 
-this is clear and extensible, and it's not too much code.
+this is clear and extensible, and it's not too much code to write for the library's author.
 
 If the implementation really requires an `int` (but I guess the author used an integer as a simple label, see later)
 you can even use:
@@ -59,12 +61,13 @@ Yes, I indeed think that 10 and 11 are so different from 1.0 and 1.1.
 When you look at an interface, the right type can tell you at first sight which values are valid.
 When you read the code, you understand straight away what `Version::http_1_1` means, as opposed to 11.
 
-Moreover, think at the general case: if I had to handle versions 1.13 and 11.3, using the current mapping, how can I
-differentiate them? At minimum, there will be some ambiguity in the usage.
+Moreover, think at the general case: if I had to handle versions 1.13 and 11.3, 
+how can I differentiate them using the current mapping?
+At minimum, there will be some ambiguity in the usage.
 
-The author wrote that introducing the enum was gratuitously adding identifiers and that he wants to keep the library simple,
+The author wrote that introducing the enum was "gratuitously adding identifiers" and that he wants to keep the library simple,
 without over-engineering. The reality is that using an enum is not gratuitous, it's useful, and by using
-an `int` instead of an `enum` is not keeping simple the library, but more complex and error-prone for the users.
+an `int` instead of an `enum` he's not keeping simple the library, but more complex and error-prone for the users.
 C'mon, it's not much work using the `enum`, it doesn't even add any overhead. Instead, you can also remove the
 runtime assert with the version check here and there: of course, when you have *labels* instead of *int*s,
 the checks are moved from run-time to compile-time. Isn't this the first rule we learn with C++?
@@ -126,8 +129,8 @@ case 2:
 }
 {% endhighlight %}
 
-and guess... `state` is an `int`. It seems the author hates `enum`s :-) Instead of using explicit labels
-(with the @@@innegabile vantaggio@@@ to be checked at compile time), he prefers to use `int`s
+and guess... `state` is an `int`. It seems the author doesn't like `enum`s very much :-)
+Instead of using explicit labels (that could be checked at compile time), he prefers to use `int`s
 and write the label in the comments!
 
 Why?! Give me only one good reason not to write instead:
@@ -153,7 +156,7 @@ case State::got_message:
 }
 {% endhighlight %}
 
-## A label is a label
+## A label is a label (and it deserves its own type)
 This library's author uses basic types when he needs labels.
 `int's for versions and states, 'bool's for request/response and so on...
 
