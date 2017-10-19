@@ -6,11 +6,11 @@ category: general
 tags: [C++]
 ---
 
-In my work I often develop applications meant to run for a long period of time,
-without a classic interaction with the user (i.e., a gui).
+In my work, I often develop applications meant to run for a long period of time,
+without a classic interaction with the user (i.e., without a proper gui).
 Sometimes, they are applications that run in a server, sometimes in a custom board,
 but almost never they are desktop applications.
-Their other characteristic is that they're not cpu bounded applications,
+Their other characteristic is that they're not CPU bound applications,
 i.e., they're not the kind of number crunching applications that you start
 and then you wait for an output.
 
@@ -24,13 +24,14 @@ Cisco routers have a command line interface, and so many devices that run unatte
 If you're working on similar software, you should definitely considering adding
 a command line interface at least for debugging purpose. For example: it wouldn't
 be great if you could connect using a telnet client to your embedded software to
-ask some internal state, to view a dump of some internal structure, to
+ask the internal state, to view a dump of some internal structure, to
 change the log level at runtime, to change the working mode, to enable or disable some modules,
 to load or unload some plugin.
 
 When you're in production, the benefit of an interactive [possibly remote] command line is obvious.
-But think at the initial phases of development. When you're writing the first prototype of
-a [@@@ IO bounded???] application. Chances are that you start writing some core features,
+But consider also at the initial phases of development. When you're writing the first prototype of
+a I/O bound application [### trovare il giusto termine. in questo caso reactive system sarebbe meglio].
+Chances are that you start writing some core features,
 some protocol, some module that does IO, just to speak with the real world.
 How do you test it? You can write a `main` that drives your piece of software,
 but usually you need some FSM... or a more interactive solution :-)
