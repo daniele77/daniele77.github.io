@@ -39,7 +39,7 @@ but usually you need some FSM... or a more interactive solution :-)
 Let's imagine: you're writing your protocol stack to speak with a legacy machine. You've got
 primitives to tell the machine to start the electric motor, to stop it, to change direction, and
 the notifies for meaningful events. You can insert in your `main` a command line interface,
-and plug the various primitives to its commands. So you can start to test 
+and plug the various primitives to its commands. So you can start to test
 use cases complex at will on your module, in an incremental manner (well,
 this requires also to be able to write incremental modular code, but this is
 a subject for another post :-).
