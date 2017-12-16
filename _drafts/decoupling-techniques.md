@@ -198,7 +198,7 @@ Svantaggi:
 
 # Comparazione delle tecniche
 
-| Method        | Modifica comportamento a run-time  | -  |
+| Tecnica       | Modifica comportamento a run-time  | -  |
 | ------------- |:-------------:| -----:|
 | Funzione non virtuale      | no |  |
 | Template | no      |    |
