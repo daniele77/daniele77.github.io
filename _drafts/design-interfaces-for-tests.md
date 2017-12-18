@@ -18,11 +18,11 @@ tags: [C++, design]
 •	We always need this kind of test? (No) 
 -->
 
-During a talk I gave some times ago, I presented an idea I used successfully in the last few years i.e., creating C++ desktop applications with html UIs. At the conference, I explained how — using html5 websockets — one can add a html UI to a desktop application without using a webserver to serve the pages. Maybe this will be a subject for another post, in the meantime if you’re interested, you can have a look to the slide of my talk [insert link]. This post, instead, is about ###.
+During a talk I gave some times ago, I presented an idea I used successfully in the last few years i.e., creating C++ desktop applications with html UIs. At the conference, I explained how — using html5 websockets — one can add a html UI to a desktop application without using a webserver to serve the pages. Maybe this will be a subject for another post, in the meantime if you’re interested, you can have a look to the slides of my talk [insert link]. This post, however, is about the importance of splitting an application into the right abstractions, designing carefully their interfaces and choose the right mechanism of interaction.
 
 The people attending the conference liked the approach above all because of the test ability of my solution, that I remarked when summarizing the benefits of the approach. In particular, I highlighted the ###
 
-Near the end of my talk, summarizing the pros and cons of the approach, I explained that — given we already have a network protocol in place — the UI can be easily removed and replaced by a websocket client able to automatically test our C++ application. For example, given an application with a UI that interacts with custom hardware we can do something similar to the following diagram:
+Near the end of my talk, summarizing the pros and cons of the approach, I explained that — given we already have a network protocol in place — the UI could be easily removed and replaced by a websocket client able to automatically test our C++ application. For example, given an application with a UI that interacts with custom hardware we can do something similar to the following diagram:
 
 ![testing the application]({{ site.baseurl }}/images/design-interfaces-for-tests_split.png)
 
