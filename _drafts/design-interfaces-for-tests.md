@@ -37,3 +37,14 @@ To achieve this goal, we should cut the application in the right way, and have t
 In this way, we can have a robust interface and we will be able to remove the UI component snd replace it with some test component.
 
 One simple way to do so is by using the good old runtime polimorphysm. 
+
+...
+
+(conclusions)
+[almost] everything I wrote is correct under the assumption that my goal is to be able to perform black box tests of the business model of my application. This is not always the case. Sometimes I want other properties in my application, and those properties requires a different form of my software.
+In general, a universal solution / technique does not exist. When we face a new project, we should focus on the (non functional) properties we want to give to it, and decide which is the form most @@@ (adatta).
+
+But every application need test, isn't it?! So, testability should be at the top of our list of non-functional requirements, whatever is the application we're writing. Well... yes and no. The only property that every software must have, regardless its kind (embedded, real-time, enterprise,...) is *correctness*. And to be confident this property holds, we must test the application in some way. But tests come in different forms: unit, automatic, manual, black box, white box, ... 
+- Io ho dato per scontato un certo tipo di test (automatico, black box)
+- Posso testare in maniera manuale con la gui
+- posso avere un app in cui è piu importante la estendibilita ( mostrare architettura a fette verticali)
