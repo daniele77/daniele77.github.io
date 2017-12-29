@@ -40,6 +40,10 @@ One simple way to do so is by using the good old runtime polimorphysm.
 
 ...
 
+Having a network protocol in place certainly gives us the possibility to test the application by simply attach a new client to the other end of the channel that stimulates the logic as if it were the Ui. But what really makes our application testable is not the protocol, but 
+
+...
+
 (conclusions)
 [almost] everything I wrote is correct under the assumption that my goal is to be able to perform automatic black box tests of the business model of my application. This is not always the case. Sometimes I want other properties in my application, and those properties requires a different form of my software.
 In general, a universal solution / technique does not exist. When we face a new project, we should focus on the (non functional) properties we want to give to it, and decide which is the form most @@@ (adatta).
