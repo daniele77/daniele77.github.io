@@ -34,9 +34,10 @@ Well, I’m very glad if many people will adopt a solution I proposed. After all
 [Having a protocol between the two components obliges us to separate the application in a sharp way, decide which parts put in each component, and carefully think about their interactions.]
 
 To achieve this goal, we should cut the application in the right way, and have the business logic not polluted with concepts about the presentation. So, the business logic components should not know about widgets or UI events. In the exact same way, the UI part should not know about details of implementation of the business logic part.
-In this way, we can have a robust interface and we will be able to remove the UI component and replace it with some test component.
+In this way, we can have a robust interface and we will be able to remove the UI component and replace it with some test component. Even without a protocol already in place.
 
-One simple way to do so is by using the good old runtime polimorphysm. 
+One simple way to do so is by using the good old runtime polimorphysm, or one of the othe decoupling mechanism of our language. Please note that a TCP protocol (e.g., websocket) is just an instance of a decoupling mechanism.
+The real important thing for testability pourpose is not the decoupling mechanism we choose, but how we cut the application!
 
 ...
 
