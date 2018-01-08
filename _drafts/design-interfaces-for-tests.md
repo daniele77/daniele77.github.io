@@ -18,9 +18,9 @@ tags: [C++, design]
 •	We always need this kind of test? (No) 
 -->
 
-During a talk I gave some times ago, I presented an idea I used successfully in the last few years i.e., creating C++ desktop applications with html UIs. At the conference, I explained how — using html5 websockets — one can add a html UI to a desktop application without using a webserver to serve the pages. Maybe this will be a subject for another post, in the meantime if you’re interested, you can have a look to the slides of my talk [insert link]. This post, however, is about the importance of splitting an application into the right abstractions, designing carefully their interfaces and choose the right mechanism of interaction.
+During a talk I gave some times ago, I presented an idea I used successfully in the last few years i.e., creating C++ desktop applications with html UIs. At the conference, I explained how — using html5 websockets — one can add a html UI to a desktop application without using a webserver to serve the pages. Maybe this will be a subject for another post, in the meantime if you’re interested, you can have a look to the slides of my talk [insert link]. This post, instead, is about the importance of splitting an application into the right abstractions, designing carefully their interfaces and choose the right mechanism of interaction.
 
-The people attending the conference liked the approach above all because of the testability of my solution, that I remarked when summarizing the benefits of the approach. In particular, I highlighted the ###
+The people attending the conference liked the approach above all because of the testability of my solution, that I remarked when summarizing the benefits of the approach. In particular, I highlighted how can be easy to black box test the application, also in an automatic fashion.
 
 Near the end of my talk, summarizing the pros and cons of the approach, I explained that — given we already have a network protocol in place — the UI could be easily removed and replaced by a websocket client able to automatically test our C++ application. For example, given an application with a UI that interacts with custom hardware we can do something similar to the following diagram:
 
@@ -36,7 +36,7 @@ Well, I’m very glad if many people will adopt a solution I proposed. After all
 To achieve this goal, we should cut the application in the right way, and have the business logic not polluted with concepts about the presentation. So, the business logic components should not know about widgets or UI events. In the exact same way, the UI part should not know about details of implementation of the business logic part.
 In this way, we can have a robust interface and we will be able to remove the UI component and replace it with some test component. Even without a protocol already in place.
 
-One simple way to do so is by using the good old runtime polimorphysm, or one of the othe decoupling mechanism of our language. Please note that a TCP protocol (e.g., websocket) is just an instance of a decoupling mechanism.
+One simple way to do so is by using the good old runtime polimorphysm, or one of the other decoupling mechanisms of our language. Please note that a TCP protocol (e.g., websocket) is just an instance of a decoupling mechanism.
 The real important thing for testability pourpose is not the decoupling mechanism we choose, but how we cut the application!
 
 ...
@@ -46,7 +46,7 @@ Having a network protocol in place certainly gives us the possibility to test th
 ...
 
 (conclusions)
-[almost] everything I wrote is correct under the assumption that my goal is to be able to perform automatic black box tests of the business model of my application. This is not always the case. Sometimes I want other properties in my application, and those properties requires a different form of my software.
+[almost] everything I wrote is correct under the assumption that my goal is to be able to perform automatic black box tests of the business model of my application. This is not always the case. Sometimes I want other properties in my application, and those properties require a different form of my software.
 In general, a universal solution / technique does not exist. When we face a new project, we should focus on the (non functional) properties we want to give to it, and decide which is the form most appropriate.
 
 But every application need test, isn't it?! So, testability should be at the top of our list of non-functional requirements, whatever is the application we're writing. Well... yes and no. The only property that every software must have, regardless its kind (embedded, real-time, enterprise,...) is *correctness*. And to be confident this property holds, we must test the application in some way. But tests come in different forms: unit, integration, automatic, manual, black box, white box, ... In this post I wrote about automatic tests, but often applications with a UI are tested as black boxes, in a manual way. And sometimes, we’re called to design applications in which extendibility is more important than automatic testing. For a certain kind of applications, a different partitioning of components is better. We’re used to split applications in horizontal layers (e.g., DB, business logic, UI) every concept having its representation in each layer. But what if we instead cut the software in vertical slices, each containing every technological aspect of a single concept? Adding a new concept would require a new slice. On the other hand, in a single slice maybe we need to mix presentation aspects with persistence aspects.
