@@ -15,7 +15,8 @@ And be careful: when I say "C++ experts" I'm not speaking about two random peopl
 encountered in a commuter train in the morning, but two guys regular speakers
 at international C++ conferences, with a great visibility and influence on the C++ programmers.
 Well, it's not a new thing that most "young" C++ gurus ignore some topic like software design and architecture,
-but forward declarations... wow, that's really C++ bread and butter. 
+but forward declarations... wow, that's really C++ 101, and I think that understanding *why* they work
+(let alone when they should be used) is important.
 
 But what are forward declarations and why they're useful?
 
