@@ -8,9 +8,22 @@ tags: [C++]
 
 TODO
 
+# valgrind
+Memory check
+(http://pages.cs.wisc.edu/~bart/537/valgrind.html)
+
+{% highlight %}
+# run
+valgrind application
+{% endhighlight %}
+
+Dice gli errori di lettura/scrittura
+
 # gprof
 
-It's a profile for gcc/g++ compilers:
+(non ne parlano tanto bene)
+
+It's a profiler for gcc/g++ compilers:
 
 Usage:
 
@@ -24,3 +37,18 @@ gprof application > result.txt
 # show profile result
 cat result.txt
 {% endhighlight %}
+
+# Callgrind (kcachegrind)
+
+Profiler.
+
+(see https://baptiste-wicht.com/posts/2011/09/profile-c-application-with-callgrind-kcachegrind.html)
+Usage:
+
+{% highlight %}
+# run
+valgrind --tool=callgrind program [program_options]
+# show profile result
+kcachegrind callgrind.out.XXX
+{% endhighlight %}
+
