@@ -58,6 +58,7 @@ Together with other users, I proposed to the author to switch to an `enum`, but 
 > adding identifiers. My intent is to keep this simple, without over-engineering when possible.
 
 Yes, I indeed think that 10 and 11 are so different from 1.0 and 1.1.
+But not because of the point after the first 1, @@@piuttosto because I think a numeric type (e.g., int) has a different meaning than a label.
 When you look at an interface, the right type can tell you at first sight which values are valid.
 When you read the code, you understand straight away what `Version::http_1_1` means, as opposed to 11.
 
