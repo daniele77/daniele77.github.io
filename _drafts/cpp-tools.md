@@ -12,7 +12,7 @@ TODO
 Memory check
 (http://pages.cs.wisc.edu/~bart/537/valgrind.html)
 
-{% highlight %}
+{% highlight shell %}
 # run
 valgrind application
 {% endhighlight %}
@@ -27,7 +27,7 @@ It's a profiler for gcc/g++ compilers:
 
 Usage:
 
-{% highlight %}
+{% highlight shell %}
 # compile
 g++ -Wall -g -pg main.cpp -o application
 # run
@@ -45,10 +45,9 @@ Profiler.
 (see https://baptiste-wicht.com/posts/2011/09/profile-c-application-with-callgrind-kcachegrind.html)
 Usage:
 
-{% highlight %}
+{% highlight shell %}
 # run
 valgrind --tool=callgrind program [program_options]
 # show profile result
 kcachegrind callgrind.out.XXX
 {% endhighlight %}
-
