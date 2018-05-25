@@ -1,10 +1,26 @@
 ---
 layout: post
-title: "Types: back to the basis"
+title: "Types: back to the basics"
 published: true
 category: general
 tags: [design, C++]
 ---
+
+<!---
+
+Scaletta
+
+- intro: libreria beast
+- int x versioni
+- perplessità. avrei usato un enum:
+    - autodocumentante, + chiaro, leggibilità
+    - più facile da estendere (1.13 vs 11.3)
+    - chiarisce all'utente che è una label e non un numbero, e che quindi non può mettere ciò che vuole (evita errori. versioni non consentite)
+    - evita assert run-time
+- gliel'ho detto: risposta
+- sì, penso che 10 e 11 siano diversi da 1.0 e 1.1
+- 
+--->
 
 Lately, I had to choose a C++ library to use for an industrial product I'm working on.
 I found what it seemed the best fit (according to some constraint I had),
@@ -53,6 +69,7 @@ enum class Version: int { http_1_0 = 10, http_1_1 = 11 };
 (the type specifier is int by default, so it could be ommitted).
 
 <p style="background-color:yellow;">ecco: aveva bisogno di un'etichetta ma ha usato un int (la cosa più semplice). le etichette sono enum, non int e non stringhe</p>
+<p style="background-color:yellow;">This is yet another C++ developer that needs a label and uses a basic type: the quick and dirty way.</p>
 
 Together with other users, I proposed to the author to switch to an `enum` / `enum class`,
 but he refused, replying:
@@ -88,7 +105,7 @@ Even when that means writing a lot of code (and this was not the case!) because 
 is to factor complex and repetitive code in one unique place, so that each user does not need to repeat that code.
 After all, a library is written once but used many times :-)
 
-## Back to the basis
+## Back to the basics
 
 It's the main point of having types in the first place.
 Using everywhere `int`s and `string`s is possible, but it's advisable to use the type that fits better your data.
