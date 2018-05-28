@@ -92,3 +92,4 @@ exclude:
   - README.md
   - CNAME
   - serve.sh
+  - blog-resources
