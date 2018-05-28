@@ -24,7 +24,7 @@ The people attending the conference liked the approach above all because of the 
 
 Near the end of my talk, summarizing the pros and cons of the approach, I explained that — given we already have a network protocol in place — the UI could be easily removed and replaced by a websocket client able to automatically test our C++ application. For example, given an application with a UI that interacts with custom hardware we can do something similar to the following diagram:
 
-![testing the application]({{ site.baseurl }}/images/design-interfaces-for-tests_split.png)
+![testing the application](/images/design-interfaces-for-tests/split.png)
 
 The test application can stimulate the inputs and check the outputs of our application to test every path we want to cover.
 

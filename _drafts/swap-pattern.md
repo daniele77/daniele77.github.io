@@ -73,7 +73,7 @@ The idea of this pattern is @@@ to have the pass the sensor data structure (@@@)
 
 
 
-![motivation]({{ site.baseurl }}/images/swap-pattern-motivation.png)
+![motivation](/images/swap-pattern/motivation.png)
 
 # Applicability
 
@@ -94,7 +94,7 @@ interaction diagrams [JCJO92, Boo94] to illustrate sequences of requests
 and collaborations between objects. Appendix B describes these notations
 in detail.
 
-![structure]({{ site.baseurl }}/images/swap-pattern-structure.png)
+![structure](/images/swap-pattern/structure.png)
 
 # Participants
 
