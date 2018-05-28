@@ -91,3 +91,4 @@ exclude:
   - LICENSE
   - README.md
   - CNAME
+  - blog-resources
