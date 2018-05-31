@@ -6,7 +6,7 @@ category: general
 tags: [design, C++]
 ---
 
-C’è una soluzione che mi è capitato di usare diverse volte nel mio software...
+C’è una soluzione che mi è capitato di usare diverse volte nel mio software ###
 
 ... pattern [...] credo sia una forma utile per discutere di design, come lo intendo io. Non microdesign, che ad esempio è la cosa su cui si concentrano maggiormente i guru del C++.
 
@@ -23,13 +23,18 @@ Si usano due strutture dati (ad albero) identiche. Una viene riempita coi dati r
 
 (Elaborare)
 
-# Pattern name and Classification:
+----
+
+# Pattern name and Classification
+
 Swap model (behavioral)
 
 # Intent
+
 The pattern allows a client (or multiple clients) to read a complex data model
 that is continuously updated by a unique producer in a thread safe fashion.
 
+<!--
 Allow ...
 
 Represent ...
@@ -42,24 +47,26 @@ Separate ...
 A short statement that answers the following questions: What does the
 design pattern do? What is its rationale and intent? What particular design
 issue or problem does it address?
-
+-->
 
 # Also known as
 
-TODO Questo non lo mettiamo
+Model publisher, Pressman.
 
 # Motivation (Forces)
 
+<!--
 A scenario that illustrates a design problem and how the class and object
 structures in the pattern solve the problem. The scenario will help you
 understand the more abstract description of the pattern that follows.
 
 TODO general explanation
+-->
 
 Sometimes it's necessary ...
 
 Consider for example an application that periodically retrieves data from a large sensor network,
-to performs some kind of statistical elaboration on the collected data set and send alarms when some criterial are met.
+to perform some kind of statistical elaboration on the collected data set and send alarms when some criteria are met.
 The retrieval operation is a task completely separated (@@@ uncorrelated, ) from the statistical analysis and alarms evaluation,
 and can possibly run in separated threads.
 Besides, the data retrieval and its usage have different timing (e.g., the sensor network is scanned each 5 minutes,
@@ -67,54 +74,78 @@ while the statistical elaboration is performed on request by a human operator).
 The data collected from the sensor network is structured in a complex lattice of objects
 similar (@@@ resemble, che mima) to the one of the real sensor network, in such a way that the elaboration modules
 can navigate the lattice in a simple way (@@@ domain?).
-In this scenario, how can all the modules of the application work together on the same data structure?
+In this scenario, how can all the modules of the application work together on the same data structure? How can all the clients use the most updated data available
+in a consistent fashion? And how can the application get rid of the old data
+only when noone is still using it?
+
+The idea of this pattern is to use two shared_ptr (in C++) or two variables (in languages with garbage collection):
+
+* `filling` holding the object structure currently retrieving the sensor data,
+* `current` holding the most recent complete acquisition.
+
+The task of the class `SensorNetwork` is to replace 
+class has the @@@ compito di sostituire current con filling
+quando ha finito
+
+@@@ TODO
 
 The idea of this pattern is @@@ to have the pass the sensor data structure (@@@) from the producer to the consumers?
 
-
+The following diagram shows a typical PATTERNNAME @@@ class structure:
 
 ![motivation](/images/swap-pattern/motivation.png)
 
 # Applicability
 
+<!--
 What are the situations in which the design pattern can be applied?
 What are examples of poor designs that the pattern can address? How can
 you recognize these situations?
+-->
 
 Use Swap Pattern when
-- choice 1
-- choice 2
-- choice 3
+
+* choice 1
+* choice 2
+* choice 3
 
 # Structure
 
+<!--
 A graphical representation of the classes in the pattern using a notation
 based on the Object Modeling Technique (OMT) [RBP+91]. We also use
 interaction diagrams [JCJO92, Boo94] to illustrate sequences of requests
 and collaborations between objects. Appendix B describes these notations
 in detail.
+-->
 
 ![structure](/images/swap-pattern/structure.png)
 
 # Participants
 
+<!--
 The classes and/or objects participating in the design pattern and their
 responsibilities.
+-->
 
-- Snapshot (SensorAcquisition)
-  - hold the entire set of data acquired by source
-  - possibly provides const function members to query the acquisition
-  - possibly a set of (etherogeneous) objects linked (e.g., a list of Measure objects)
-  - perform a complete scan
-- Source (SensorNetwork)
-  - periodically asks source to perform a new scan
-  - provide to its clients the latest complete scan
-- Client (WebService, ThresholdMonitor, Statistics)
-  - asks the Source for the latest Snapshot available and use it (in read-only mode)
+* `Snapshot` (`SensorAcquisition`)
+  * hold the entire set of data acquired by source
+  * possibly provides const function members to query the acquisition
+  * possibly a set of (etherogeneous) objects linked (e.g., a list of Measure objects)
+  * perform a complete scan
+* `Source` (`SensorNetwork`)
+  * periodically asks source to perform a new scan
+  * provide to its clients the latest complete scan
+* `Client` (`WebService`, `ThresholdMonitor`, `Statistics`)
+  * asks the `Source` for the latest `Snapshot` available and use it (in read-only mode)
 
 # Collaboration
 
+<!--
 How the participants collaborate to carry out their responsibilities.
+-->
+
+![structure](/images/swap-pattern/collaboration.png)
 
 # Consequences
 
@@ -123,48 +154,125 @@ and results of using the pattern? What aspect of system structure does it
 let you vary independently?
 
 (Non so se va qui. Questi sono gli effetti del pattern)
-- disaccoppiamento del produttore e dei lettori (come li chiamiamo? In realtà non è proprio un produttore) dal punto di vista temporale. Il produttore può procedere all’aggiornamento col suo ritmo, i lettori ogni volta ottengono la versione più recente.
-- gestione della concorrenza. Il produttore e ogni lettore possono essere in thread diversi
-- viene garantita la coerenza di tutta la struttura dati che viene letta in un dato istante da un consumatore senza bisogno di lock presi per tanto tempo.
-- occupazione di memoria ridotta al minimo indispensabile per garantire che ogni consumatore abbia accesso coerente allo snapshot più recente disponibile.
+
+* disaccoppiamento del produttore e dei lettori (come li chiamiamo? In realtà non è proprio un produttore) dal punto di vista temporale. Il produttore può procedere all’aggiornamento col suo ritmo, i lettori ogni volta ottengono la versione più recente.
+* gestione della concorrenza. Il produttore e ogni lettore possono essere in thread diversi
+* viene garantita la coerenza di tutta la struttura dati che viene letta in un dato istante da un consumatore senza bisogno di lock presi per tanto tempo.
+* occupazione di memoria ridotta al minimo indispensabile per garantire che ogni consumatore abbia accesso coerente allo snapshot più recente disponibile.
 
 # Implementation
 
+<!--
 What pitfalls, hints, or techniques should you be aware of when
 implementing the pattern? Are there language-specific issues?
+-->
 
-<TODO>
+Here are NNN issues to consider when implementing the XXX pattern:
 
-DataSource può essere sincrono (come descritto prima) oppure asincrono.
-In quest'ultimo caso DataSource potrebbe avere un evento "ScanCompleted"
-su cui si registra Snapshot, a seguito del quale modifica il proprio campo current.
+1. `Snapshot` (and the application in general) can be synchronous or asynchronous.
 
-Il pattern è descritto in C++, ma può essere vantaggiosamente utilizzato un linguaggio
-con garbage collection. Anzi, in C++ occorre usare gli shared_ptr in modo che
-venga distrutto uno snapshot quando nessun client lo utilizza più e è già disponibile quello nuovo.
+   In the first case, the method `Snapshot::Scan` is a blocking function and the caller
+   (i.e., `Source`) waits until the data structure is completed before acquiring the mutex
+   and assign `current` to `filling`. Within a synchronous application,
+   clients will run in other threads.
 
-Perché il meccanismo degli shared_ptr (o di garbage collection) funzioni
-(cioè che sgli snapshot obsoleti vengano distrutti),
-occorre che i client invochino XXX::Get() ogni volta che hanno bisogno di Snapshot.
+   In the second case, the method `Snapshot::Scan` starts the acquisition operation and
+   exit immediately. When the data structure is completed, an event notification mechanism
+   (e.g., events, callbacks, signals) takes care to announce the end of the operation to
+   `Source`, that can finally acquire the mutex before assigning `current` to `filling`.
+   An asynchronous application can be single-thread or multi-thread.
 
-Modello di concorrenza: TODO.
+2. The pattern is described using C++, but languages with garbage collection can be used equally well.
+   In C++ `std::shared_ptr` is needed to be sure a `Snapshot` is deleted when no client is using it
+   and `Source` has a more updated snapshot ready.
+   In a language with garbage collection, the collector will take care of deleting old snapshots
+   when they're no more used (unfortunally at undetermined time, so that we can have many
+   unused shapshots in memory).
 
-Gli oggetti che compongono Snapshot (potenzialmente una grande e complessa struttura dati)
-vengono distrutti e ricreati ad ogni ciclo di scansione. E' possibile utilizzare un pool
-di oggetti (potenzialmene solo una coppia di strutture dati Snapshot).
+3. The `std::shared_ptr` (or garbage collection) mechanism will work
+   (i.e., old snapshots are deleted) only if clients use `Source::GetLastSnapshot()` every time
+   they need a snapshot.
 
-Si noti che Snapshot (e la struttura dati che rappresenta)) è immutabile,
-cosa che va molto di moda ultimamente. Con tutti i vantaggi che porta dal punto di vista della
-concorrenza (e.g., multipli client che girano in thread diversi).
+4. TODO: concurrency model
 
-Be aware of stupid classes! Snapshot (and the classes it represents) should not be data only classes, filled by Source. Every class should instead contribute to retrieve its own data.
+5. TODO: Gli oggetti che compongono Snapshot (potenzialmente una grande e complessa struttura dati)
+   vengono distrutti e ricreati ad ogni ciclo di scansione. E' possibile utilizzare un pool
+   di oggetti (potenzialmene solo una coppia di strutture dati Snapshot).
 
-(Problema analogo ma difficile soluzione è quello dell’utilizzo dei dati: dobbiamo mettere anche questa responsabilità dentro snapshot?)
+6. TODO: Si noti che Snapshot (e la struttura dati che rappresenta)) è immutabile,
+   cosa che va molto di moda ultimamente. Con tutti i vantaggi che porta dal punto di vista della
+   concorrenza (e.g., multipli client che girano in thread diversi).
+
+7. TODO: Be aware of stupid classes! Snapshot (and the classes it represents) should not be data only 
+   classes, filled by Source. Every class should instead contribute to retrieve its own data.
+
+   (Problema analogo ma difficile soluzione è quello dell’utilizzo dei dati: dobbiamo mettere anche questa responsabilità dentro snapshot?)
 
 # Sample Code
 
+<!--
 Code fragments that illustrate how you might implement the pattern in
 C++ or Smalltalk.
+-->
+
+```c++
+class SensorAcquisition
+{
+public:
+    // interface for clients
+    const SomeComplexDataStructure& Data() const { /* ... */ }
+    // interface for SensorNetwork
+    template <typename Handler>
+    void Scan(Handler h) { /* ... */ }
+};
+
+class SensorNetwork
+{
+public:
+    SensorNetwork() :
+        timer( [this](){ OnTimerExpired(); } )
+    {
+        timer.Start(10s);
+    }
+    shared_ptr<SensorAcquisition> GetLastMeasure() const
+    {
+        lock_guard<mutex> lock(mtx);
+        return current;
+    }
+private:
+    void OnTimerExpired()
+    {
+        filling = make_shared<SensorAcquisition>();
+        filling->Scan([this](){ OnScanCompleted(); });
+    }
+    void OnScanCompleted()
+    {
+        lock_guard<mutex> lock(mtx);
+        current = filling;
+    }
+
+    PeriodicTimer timer;
+    shared_ptr<SensorAcquisition> filling;
+    shared_ptr<SensorAcquisition> current;
+    mutable mutex mtx; // protect "current"
+};
+
+class Client
+{
+public:
+    Client(const SensorNetwork& sn) : sensors(sn) {}
+
+    // possibly executed in another thread
+    void DoSomeWork()
+    {
+        auto measure = sensors.GetLastMeasure();
+        // do something with measure
+        // ...
+    }
+private:
+    const SensorNetwork& sensors;
+};
+```
 
 # Known Uses
 
@@ -176,4 +284,8 @@ examples from different domains.
 What design patterns are closely related to this one? What are the
 important differences? With which other patterns should this one be used?
 
-- Snapshot can be a Facade @@@
+* Snapshot can be a Façade
+* Source can use a Strategy to change the policy of update (e.g., periodic VS continuous)
+
+----
+
