@@ -167,20 +167,10 @@ What pitfalls, hints, or techniques should you be aware of when
 implementing the pattern? Are there language-specific issues?
 -->
 
-Here are NNN issues to consider when implementing the XXX pattern:
+Here are NNN (TODO) issues to consider when implementing the XXX (TODO) pattern:
 
-1. `Snapshot` (and the application in general) can be synchronous or asynchronous.
-
-   In the first case, the method `Snapshot::Scan` is a blocking function and the caller
-   (i.e., `Source`) waits until the data structure is completed before acquiring the mutex
-   and assign `current` to `filling`. Within a synchronous application,
-   clients will run in other threads.
-
-   In the second case, the method `Snapshot::Scan` starts the acquisition operation and
-   exit immediately. When the data structure is completed, an event notification mechanism
-   (e.g., events, callbacks, signals) takes care to announce the end of the operation to
-   `Source`, that can finally acquire the mutex before assigning `current` to `filling`.
-   An asynchronous application can be single-thread or multi-thread.
+1. A new acquisition can be started periodically (as proposed in the example) or
+   when the previous is completed.
 
 2. The pattern is described using C++, but languages with garbage collection can be used equally well.
    In C++ `std::shared_ptr` is needed to be sure a `Snapshot` is deleted when no client is using it
@@ -193,20 +183,38 @@ Here are NNN issues to consider when implementing the XXX pattern:
    (i.e., old snapshots are deleted) only if clients use `Source::GetLastSnapshot()` every time
    they need a snapshot.
 
-4. TODO: concurrency model
+4. `Snapshot` (and the application in general) can be synchronous or asynchronous.
 
-5. TODO: Gli oggetti che compongono Snapshot (potenzialmente una grande e complessa struttura dati)
-   vengono distrutti e ricreati ad ogni ciclo di scansione. E' possibile utilizzare un pool
-   di oggetti (potenzialmene solo una coppia di strutture dati Snapshot).
+   In the first case, the method `Snapshot::Scan` is a blocking function and the caller
+   (i.e., `Source`) waits until the data structure is completed before acquiring the mutex
+   and assign `current` to `filling`. Within a synchronous application,
+   clients will run in other threads.
 
-6. TODO: Si noti che Snapshot (e la struttura dati che rappresenta)) è immutabile,
-   cosa che va molto di moda ultimamente. Con tutti i vantaggi che porta dal punto di vista della
-   concorrenza (e.g., multipli client che girano in thread diversi).
+   In the second case, the method `Snapshot::Scan` starts the acquisition operation and
+   exit immediately. When the data structure is completed, an event notification mechanism
+   (e.g., events, callbacks, signals) takes care to announce the end of the operation to
+   `Source`, that can finally acquire the mutex before assigning `current` to `filling`.
+   An asynchronous application can be single-thread or multi-thread.
 
-7. TODO: Be aware of stupid classes! Snapshot (and the classes it represents) should not be data only 
-   classes, filled by Source. Every class should instead contribute to retrieve its own data.
+5. The pattern supports every concurrency model: from the single thread
+   (in a completely asynchronous applciation) to the maximum parallelization possible
+   (when the acquisition has its own threads, as well as each client).
 
-   (Problema analogo ma difficile soluzione è quello dell’utilizzo dei dati: dobbiamo mettere anche questa responsabilità dentro snapshot?)
+6. The objects composing `Snapshot` (usually a huge complex data structure)
+   are deleted and recreated at every scan cycle. It's possible to use a pool
+   of objects instead (TODO: come ci si regola in questo caso con shared_ptr?).
+
+7. Please note that `Snapshot` (and the classes it represents) is immutable.
+   After its creation (and after the scan is completed), the clients can only read it.
+   When a new snapshot is available, the old one is deleted and the clients will read the new one.
+   This is a big advantage from the concurrency point of view: multiple clients in different threads
+   can use the same snapshot without locks.
+
+8. Be aware of stupid classes! `Snapshot` (and the classes it represents) should not be a passive
+   container of data. Every class should at least contribute to retrieve its own data,
+   and one could also consider whether to add methods and facilities to use the data
+   (the latter is actually an extremely sensitive and complex issue, it would be subject of other(s) posts).
+
 
 # Sample Code
 
