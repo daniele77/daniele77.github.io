@@ -25,11 +25,11 @@ Si usano due strutture dati (ad albero) identiche. Una viene riempita coi dati r
 
 ----
 
-# Pattern name and Classification
+## Pattern name and Classification
 
 Swap model (behavioral)
 
-# Intent
+## Intent
 
 The pattern allows a client (or multiple clients) to read a complex data model
 that is continuously updated by a unique producer in a thread safe fashion.
@@ -49,11 +49,11 @@ design pattern do? What is its rationale and intent? What particular design
 issue or problem does it address?
 -->
 
-# Also known as
+## Also known as
 
 Model publisher, Pressman.
 
-# Motivation (Forces)
+## Motivation (Forces)
 
 <!--
 A scenario that illustrates a design problem and how the class and object
@@ -83,11 +83,10 @@ The idea of this pattern is to use two shared_ptr (in C++) or two variables (in 
 * `filling` holding the object structure currently retrieving the sensor data,
 * `current` holding the most recent complete acquisition.
 
-The task of the class `SensorNetwork` is to replace 
-class has the @@@ compito di sostituire current con filling
-quando ha finito
+The task of the class `SensorNetwork` is to decide when it's time to start a new acquisition
+and to substitute `current` with `filling` when the aquisition is done.
 
-@@@ TODO
+(TODO)
 
 The idea of this pattern is @@@ to have the pass the sensor data structure (@@@) from the producer to the consumers?
 
@@ -95,7 +94,7 @@ The following diagram shows a typical PATTERNNAME @@@ class structure:
 
 ![motivation](/images/swap-pattern/motivation.png)
 
-# Applicability
+## Applicability
 
 <!--
 What are the situations in which the design pattern can be applied?
@@ -109,7 +108,7 @@ Use Swap Pattern when
 * choice 2
 * choice 3
 
-# Structure
+## Structure
 
 <!--
 A graphical representation of the classes in the pattern using a notation
@@ -121,7 +120,7 @@ in detail.
 
 ![structure](/images/swap-pattern/structure.png)
 
-# Participants
+## Participants
 
 <!--
 The classes and/or objects participating in the design pattern and their
@@ -139,7 +138,7 @@ responsibilities.
 * `Client` (`WebService`, `ThresholdMonitor`, `Statistics`)
   * asks the `Source` for the latest `Snapshot` available and use it (in read-only mode)
 
-# Collaboration
+## Collaboration
 
 <!--
 How the participants collaborate to carry out their responsibilities.
@@ -147,11 +146,13 @@ How the participants collaborate to carry out their responsibilities.
 
 ![structure](/images/swap-pattern/collaboration.png)
 
-# Consequences
+## Consequences
 
+<!--
 How does the pattern support its objectives? What are the trade-offs
 and results of using the pattern? What aspect of system structure does it
 let you vary independently?
+-->
 
 (Non so se va qui. Questi sono gli effetti del pattern)
 
@@ -160,7 +161,7 @@ let you vary independently?
 * viene garantita la coerenza di tutta la struttura dati che viene letta in un dato istante da un consumatore senza bisogno di lock presi per tanto tempo.
 * occupazione di memoria ridotta al minimo indispensabile per garantire che ogni consumatore abbia accesso coerente allo snapshot più recente disponibile.
 
-# Implementation
+## Implementation
 
 <!--
 What pitfalls, hints, or techniques should you be aware of when
@@ -215,8 +216,7 @@ Here are NNN (TODO) issues to consider when implementing the XXX (TODO) pattern:
    and one could also consider whether to add methods and facilities to use the data
    (the latter is actually an extremely sensitive and complex issue, it would be subject of other(s) posts).
 
-
-# Sample Code
+## Sample Code
 
 <!--
 Code fragments that illustrate how you might implement the pattern in
@@ -282,12 +282,12 @@ private:
 };
 ```
 
-# Known Uses
+## Known Uses
 
 Examples of the pattern found in real systems. We include at least two
 examples from different domains.
 
-# Related Patterns
+## Related Patterns
 
 What design patterns are closely related to this one? What are the
 important differences? With which other patterns should this one be used?
@@ -296,4 +296,3 @@ important differences? With which other patterns should this one be used?
 * Source can use a Strategy to change the policy of update (e.g., periodic VS continuous)
 
 ----
-
