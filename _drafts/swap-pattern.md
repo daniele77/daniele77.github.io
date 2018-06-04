@@ -51,7 +51,7 @@ issue or problem does it address?
 
 ## Also known as
 
-Model publisher, Pressman.
+Model publisher, Pressman. Newsagent
 
 ## Motivation (Forces)
 
@@ -102,11 +102,11 @@ What are examples of poor designs that the pattern can address? How can
 you recognize these situations?
 -->
 
-Use Swap Pattern when
+Use Swap Pattern (TODO) when
 
-* choice 1
-* choice 2
-* choice 3
+* you have a complex data structure slow to update.
+* its clients must asyncronously use the most updated data structure version.
+* TODO
 
 ## Structure
 
