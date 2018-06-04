@@ -2031,7 +2031,7 @@
 <XPD:ATTR name="Top" type="integer">662</XPD:ATTR>
 <XPD:ATTR name="Width" type="integer">337</XPD:ATTR>
 <XPD:ATTR name="Height" type="integer">98</XPD:ATTR>
-<XPD:ATTR name="Text" type="string">shared_ptr&lt;Snapshot&gt; Source::Get()
+<XPD:ATTR name="Text" type="string">shared_ptr&lt;Snapshot&gt; Source::GetLastSnapshot()
 {
     scoped_lock lock(mtx);
     return current;

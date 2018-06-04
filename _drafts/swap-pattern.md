@@ -67,13 +67,13 @@ Sometimes it's necessary ...
 
 Consider for example an application that periodically retrieves data from a large sensor network,
 to perform some kind of statistical elaboration on the collected data set and send alarms when some criteria are met.
-The retrieval operation is a task completely separated (@@@ uncorrelated, ) from the statistical analysis and alarms evaluation,
+The retrieval operation is a complex long task, involving several network protocols, and is completely independent (TODO separated, uncorrelated, ) from the statistical analysis and alarms evaluation,
 and can possibly run in separated threads.
 Besides, the data retrieval and its usage have different timing (e.g., the sensor network is scanned each 5 minutes,
 while the statistical elaboration is performed on request by a human operator).
 The data collected from the sensor network is structured in a complex lattice of objects
-similar (@@@ resemble, che mima) to the one of the real sensor network, in such a way that the elaboration modules
-can navigate the lattice in a simple way (@@@ domain?).
+similar (TODO resemble, che mima) to the one of the real sensor network, in such a way that the elaboration modules
+can navigate the lattice in a simple way (TODO domain?).
 In this scenario, how can all the modules of the application work together on the same data structure? How can all the clients use the most updated data available
 in a consistent fashion? And how can the application get rid of the old data
 only when noone is still using it?
@@ -83,14 +83,16 @@ The idea of this pattern is to use two shared_ptr (in C++) or two variables (in 
 * `filling` holding the object structure currently retrieving the sensor data,
 * `current` holding the most recent complete acquisition.
 
-The task of the class `SensorNetwork` is to decide when it's time to start a new acquisition
+The main responsibility of the class `SensorNetwork` is to decide when it's time to start a new acquisition
 and to substitute `current` with `filling` when the aquisition is done.
+Whenever a client need to perform some task on the data acquired, asks `SensorNetwork` that
+returns `current`, i.e., the most recent data acquisition. Until the client holds the smart pointer, the @@@
 
 (TODO)
 
 The idea of this pattern is @@@ to have the pass the sensor data structure (@@@) from the producer to the consumers?
 
-The following diagram shows a typical PATTERNNAME @@@ class structure:
+The following diagram shows a typical PATTERNNAME (TODO) class structure:
 
 ![motivation](/images/swap-pattern/motivation.png)
 
@@ -284,13 +286,19 @@ private:
 
 ## Known Uses
 
+<!--
 Examples of the pattern found in real systems. We include at least two
 examples from different domains.
+-->
+
+TODO 
 
 ## Related Patterns
 
+<!--
 What design patterns are closely related to this one? What are the
 important differences? With which other patterns should this one be used?
+-->
 
 * Snapshot can be a Façade
 * Source can use a Strategy to change the policy of update (e.g., periodic VS continuous)
