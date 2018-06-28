@@ -6,6 +6,43 @@ category: general
 tags: [design, C++]
 ---
 
+Several times happened to me to encounter the same sort of problem when developing 
+a certain kind of applications
+(I guess there is not yet a term globally acknowledged for such a kind of software),
+and to solve it using everytime the same object structure, interacting in the same way
+(with some slight difference).
+
+<!-- There is a solution that I used several times in my applications, under specific circumstances. -->
+
+Since the solution worked very well for me, and it's proving robustness in many production systems,
+I thought it could be useful to others (or anyway, it can be useful at least formalize a problem/solution
+that maybe others are already using).
+
+Furthemore, I could not find any reference to a similar solution in literature,
+and this convinced me to write this post
+(of course, if you know it is already documented and formalized somewhere, please let me know).
+
+Being a structure that solve specific software forces, I decided to document it under the well know form of a *design patter*. First of all because it is exactly that:
+a *pattern* (meaning something we encounter often)
+and about *design* (i.e., the structure of the software).
+
+On the other hand, I believe that the "design pattern way" could be a form
+useful to discuss about *Software Design*.
+Be aware: not *microdesign* at the code level, that sadly is the aspect
+on which nowadays C++ gurus focus most.
+
+Since statistically young devleopers haven't read the book "Design Patterns"
+(because C++ gurus always speak about micro-optimization -- but this is an entirely other blog post)
+I hope reading this post is enough to make them curious about the subject.
+
+So, let's begin with the real pattern, described in the commonly used documentation format
+made famous by the book
+(See 
+http://en.wikipedia.org/wiki/Software_design_pattern#Documentation
+or -- even better -- read the real book! :-). 
+
+<!--
+
 C’è una soluzione che mi è capitato di usare diverse volte nel mio software ###
 
 ... pattern [...] credo sia una forma utile per discutere di design, come lo intendo io. Non microdesign, che ad esempio è la cosa su cui si concentrano maggiormente i guru del C++.
@@ -22,6 +59,8 @@ Come garantire la consistenza e coerenza per il web server?
 Si usano due strutture dati (ad albero) identiche. Una viene riempita coi dati raccolti, l’altra letta dal web service. Si sfruttano gli Smart pointer (shared) per fare in modo che i client possano continuare a navigare lo stato dei sensori in maniera coerente, e visto che lettori e scrittori lavorano sempre su strutture dati diverse, l’unico lock necessario è quello della variabile che contiene gli Smart pointer corrente e futuro.
 
 (Elaborare)
+
+-->
 
 ----
 
@@ -63,11 +102,14 @@ understand the more abstract description of the pattern that follows.
 TODO general explanation
 -->
 
-Sometimes it's necessary ...
+Sometimes it's necessary to decouple the source of a complex data
+from its consumers, in such a way that every actor can run to its own rate
+without interfer with each other. (TODO: rivedere)
 
 Consider for example an application that periodically retrieves data from a large sensor network,
 to perform some kind of statistical elaboration on the collected data set and send alarms when some criteria are met.
-The retrieval operation is a complex long task, involving several network protocols, and is completely independent (TODO separated, uncorrelated, ) from the statistical analysis and alarms evaluation,
+The retrieval operation is a complex long task, involving several network protocols,
+and is completely independent (TODO separated, uncorrelated, ) from the statistical analysis and alarms evaluation,
 and can possibly run in separated threads.
 Besides, the data retrieval and its usage have different timing (e.g., the sensor network is scanned each 5 minutes,
 while the statistical elaboration is performed on request by a human operator).
@@ -80,13 +122,17 @@ only when noone is still using it?
 
 The idea of this pattern is to use two shared_ptr (in C++) or two variables (in languages with garbage collection):
 
-* `filling` holding the object structure currently retrieving the sensor data,
-* `current` holding the most recent complete acquisition.
+* `filling`: holding the object structure currently retrieving the sensor data,
+* `current`: holding the most recent complete acquisition.
 
-The main responsibility of the class `SensorNetwork` is to decide when it's time to start a new acquisition
-and to substitute `current` with `filling` when the aquisition is done.
-Whenever a client need to perform some task on the data acquired, asks `SensorNetwork` that
-returns `current`, i.e., the most recent data acquisition. Until the client holds the smart pointer, the @@@
+The main responsibility of the class `SensorNetwork` is to decide when it's time to start
+a new acquisition and to substitute `current` with `filling` when the aquisition is done.
+Whenever a client needs to perform some task on the data acquired, asks `SensorNetwork` that
+returns `current`, i.e., the most recent data acquisition.
+An object of class `SensorNetwork` is granted to remain in life while the client holds the smart pointer.
+
+While the client holds the smart pointer, the data structure is granted to remain in life
+and not change (and the same is still valid in garbage collected languages).
 
 (TODO)
 
