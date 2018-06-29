@@ -19,8 +19,8 @@ I thought it could be useful to others (or anyway, it can be useful at least for
 that maybe others are already using).
 
 Furthemore, I could not find any reference to a similar solution in literature,
-and this convinced me to write this post
-(of course, if you know it is already documented and formalized somewhere, please let me know).
+and this convinced me to write this post.
+Of course, if you know it is already documented and formalized somewhere, please let me know.
 
 Being a structure that solve specific software forces, I decided to document it under the well know form of a *design patter*. First of all because it is exactly that:
 a *pattern* (meaning something we encounter often)
@@ -31,12 +31,12 @@ useful to discuss about *Software Design*.
 Be aware: not *microdesign* at the code level, that sadly is the aspect
 on which nowadays C++ gurus focus most.
 
-Since statistically young devleopers haven't read the book "Design Patterns"
+Since most of young devleopers haven't read the book "Design Patterns"
 (because C++ gurus always speak about micro-optimization -- but this is an entirely other blog post)
 I hope reading this post is enough to make them curious about the subject.
 
 So, let's begin with the real pattern, described in the commonly used documentation format
-made famous by the book
+made famous by the GoF book
 (See 
 http://en.wikipedia.org/wiki/Software_design_pattern#Documentation
 or -- even better -- read the real book! :-). 
