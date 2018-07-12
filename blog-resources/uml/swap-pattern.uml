@@ -2916,11 +2916,12 @@ mtx.unlock();
 </XPD:OBJ>
 <XPD:OBJ name="OwnedViews[22]" type="UMLNoteView" guid="C4aiooIsxUK9Rh749ts4rQAA">
 <XPD:ATTR name="LineColor" type="string">clMaroon</XPD:ATTR>
-<XPD:ATTR name="Left" type="integer">432</XPD:ATTR>
-<XPD:ATTR name="Top" type="integer">616</XPD:ATTR>
+<XPD:ATTR name="Left" type="integer">428</XPD:ATTR>
+<XPD:ATTR name="Top" type="integer">608</XPD:ATTR>
 <XPD:ATTR name="Width" type="integer">106</XPD:ATTR>
-<XPD:ATTR name="Height" type="integer">44</XPD:ATTR>
-<XPD:ATTR name="Text" type="string">returns current
+<XPD:ATTR name="Height" type="integer">62</XPD:ATTR>
+<XPD:ATTR name="Text" type="string">acquire mtx,
+returns current
 i.e., s1
 </XPD:ATTR>
 </XPD:OBJ>
