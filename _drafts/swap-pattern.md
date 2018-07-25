@@ -1,46 +1,69 @@
 ---
 layout: post
-title: "TODO - Swap Model: a design pattern"
+title: "Flip Model: a design pattern"
 published: true
 category: general
 tags: [design, C++]
 ---
 
-Several times happened to me to encounter the same sort of problem when developing 
-a certain kind of applications
-(I guess there is not yet a term globally acknowledged for such a kind of software),
-and to solve it using everytime the same object structure, interacting in the same way
-(with some slight difference).
-
+More than once, designing a specific kind of applications,
+I used a certain object structure that helped me to solve
+smartly enough the situation.
+<!--
+During the design phase of a specific kind of applications,
+several times I've encountered similar situations,
+and approached it using the same object structure every time,
+with some slight adjustment.
+-->
 <!-- There is a solution that I used several times in my applications, under specific circumstances. -->
 
-Since the solution worked very well for me, and it's proving robustness in many production systems,
-I thought it could be useful to others (or anyway, it can be useful at least formalize a problem/solution
-that maybe others are already using).
+Since this solution worked very well for me,
+and it's still proving robustness in many production systems,
+I thought it might be useful to others
+(and, anyway, I think it's always worth formalizing a problem/solution even 
+when others are already using it).
 
-Furthermore, I could not find any reference to a similar solution in literature,
-and this convinced me to write this post.
-Of course, if you know it is already documented and formalized somewhere, please let me know.
+After some research, I could not find any reference to a such solution in literature,
+and this finally convinced me to write this post.
+But if you know it is already documented and formalized somewhere, please let me know.
 
 Being a structure that solves specific software forces, I decided to document it under the well-known form of a *design pattern*.
 First of all, because it is exactly that:
 a *pattern* (meaning something we encounter often)
-and about *design* (i.e., the structure of the software).
+and it's about *design* (i.e., the structure of the software).
 
-On the other hand, I believe that the "design pattern way" could be a form
-useful to discuss *Software Design*.
-Be aware: not *micro design* at the code level, that sadly is the aspect
-on which nowadays C++ gurus focus most.
+On the other hand, I believe that the design pattern way is still 
+a convenient form to discuss *Software Design* (and primarily *Architectural Design*).
+Unfortunately, it seems "modern C++" community prefers to focus on "micro design" instead,
+but I hope that C++ [application] developers know best,
+and be aware that thinking about the shape of their programs
+is still the only solution to dominate complexity.
 
-Since most of the young developers haven't read the book "Design Patterns"
-(because C++ gurus always speak about micro-optimization -- but this is another story and blog post)
+<!--
+Besides, 
+, mostly architectural design (and not *micro design*,
+that appear to be the most focused matter in C++ communities)
+Be careful: I mean exactly "Software Design", not *micro design*,
+that sadly happen to be the aspect on which nowadays C++ gurus focus most.
+-->
+
+Besides, some young developers might not know the book "Design Patterns",
+so I hope reading this post can help to make them curious about
+patterns and design in general.
+
+<!--
+Since the vast majority of young developers haven't read the book "Design Patterns"
+(because C++ gurus always speak about micro-optimization -- 
+but this is another story, for another blog post)
 I hope reading this post is enough to make them curious about the subject.
+-->
 
-So, let's begin with the real pattern, described in the commonly used documentation format
-made famous by the GoF book
+So, let's start with the pattern subject of this post:
+I will describe it using the documentation format
+used in the GoF book
 (See 
 http://en.wikipedia.org/wiki/Software_design_pattern#Documentation
-or -- even better -- read the real book! :-). 
+or -- even better -- read the book! :-). 
 
 <!--
 
@@ -71,7 +94,7 @@ Due i problemi da risolvere:
 
 ## Pattern name and Classification
 
-Swap model (behavioral)
+Flip Model (behavioral).
 
 ## Intent
 
@@ -82,7 +105,7 @@ that is continuously updated by a unique producer, in a thread-safe fashion.
 Allow ...
 
 Represent ...
-Swap lets you ...
+Flip lets you ...
 
 Provide ...
 
@@ -95,7 +118,7 @@ issue or problem does it address?
 
 ## Also known as
 
-Model publisher, Pressman. Newsagent
+Model publisher, Pressman, Newsagent.
 
 ## Motivation (Forces)
 
@@ -107,23 +130,24 @@ understand the more abstract description of the pattern that follows.
 TODO general explanation
 -->
 
-Sometimes it's necessary to decouple the source of a complex data
-from its consumers, in such a way that every actor can run at its own pace
+Sometimes it's necessary to decouple the usage of a complex data structure
+from its source, in such a way that every actor can run at their own pace
 without interfering with each other.
 
 Consider for example an application that periodically retrieves data from a large sensor network,
-to perform some kind of statistical elaboration on the collected data set and send alarms when some criteria are met.
+to perform some kind of statistical elaboration on the 
+collected data set and send alarms when some criteria are met.
+The data collected from the sensor network is structured in a complex lattice of objects
+resembling the ones you would find in the physical world,
+so that the elaboration modules can navigate
+the data in a more natural way.
 The retrieval operation is a complex long task, involving several network protocols,
-and is completely independent (TODO separated, uncorrelated, ) from the statistical analysis and alarms evaluation,
+that is completely uncorrelated from the statistical analysis and alarms evaluation,
 and can possibly run in separated threads.
 Besides, the data retrieval and its usage have different timing
 (e.g., the sensor network is scanned every 5 minutes,
 while the statistical elaboration is performed on request by a human operator
 on the most recent collected dataset).
-The data collected from the sensor network is structured in a complex lattice of objects
-resembling the ones you find in the physical world,
-in such a way that the modules doing the data elaboration can navigate
-the data in a more natural way.
 <!--
 similar (TODO resemble, che mima) to the one of the real sensor network, in such a way that the elaboration modules
 can navigate the lattice in a simple way (TODO domain?).
@@ -132,8 +156,7 @@ can navigate the lattice in a simple way (TODO domain?).
 In this scenario, how can all the modules of the application work together on the same data structure?
 How can all the clients use the most updated data available
 in a consistent fashion?
-And how can the application get rid of the old data
-only when no one is still using it?
+And how can the application get rid of the old data when it is no longer needed?
 
 <!--
 The main idea behind this pattern is to use two shared_ptr (in C++) or two variables (in languages with garbage collection):
@@ -170,7 +193,7 @@ The safety of the code is granted by:
    substitute by `filling`)
 2. the smart pointer exchange is protected by a mutex.
 
-The following diagram shows a typical PATTERNNAME (TODO) class structure:
+The following diagram shows a typical Flip Model class structure:
 
 ![motivation](/images/swap-pattern/motivation.png)
 
@@ -182,7 +205,7 @@ What are examples of poor designs that the pattern can address? How can
 you recognize these situations?
 -->
 
-Use PATTERNNAME (TODO) when
+Use Flip Model when
 
 * you have a complex data structure slow to update.
 * Its clients must asynchronously read the most updated data available
@@ -209,7 +232,7 @@ responsibilities.
 -->
 
 * `Snapshot` (`SensorAcquisition`)
-  * hold the entire set of data acquired by the source
+  * hold the whole set of data acquired by the source
   * possibly provides const function members to query the acquisition
   * possibly a set of (heterogeneous) objects linked (e.g., a list of Measure objects)
   * perform a complete scan
@@ -229,8 +252,8 @@ How the participants collaborate to carry out their responsibilities.
   and commands it to start the acquisition.
 * When the acquisition is terminated, `Snapshot` performs the assignment
   `current=filling` protected by a mutex.
-  If no clients were holding the previous `current`, the pointed `Source` is destroyed.
-* When a client needs the most updated `Source`, calls `Snapshot::GetLastSnapshot()`
+  If no clients were holding the previous `current`, the pointed `Source` is automatically destroyed (by the shared pointer).
+* When a client needs the most updated `Source`, it calls `Snapshot::GetLastSnapshot()`
   that returns `current`.
 
 ![structure](/images/swap-pattern/collaboration.png)
@@ -254,11 +277,11 @@ let you vary independently?
 
 TODO: CONTROLLARE
 
-* PATTERNNAME (TODO) decouples the producer from the readers:
+* Flip Model decouples the producer from the readers:
   the producer can go on with the update of the data (slow)
   and each reader gets each time the most updated version.
 * Synchronization. Producer and readers can run in different threads.
-* PATTERNNAME (TODO) grants the coherence of all the data structures that are
+* Flip Model grants the coherence of all the data structures that are
   read in a given instant from a reader, without locks taken for long times.
 * Memory consumption to the bare minimum to grant that every reader
   has a coherent access to the most recent snapshot.
@@ -270,14 +293,14 @@ What pitfalls, hints, or techniques should you be aware of when
 implementing the pattern? Are there language-specific issues?
 -->
 
-Here are 8 issues to consider when implementing the PATTERNNAME (TODO) pattern:
+Here are 8 issues to consider when implementing the Flip Model pattern:
 
-1. A new acquisition can be started periodically (as proposed in the example) or
-   immediately after the previous one is completed.
+1. A new acquisition can be started periodically (as proposed in the example) or continuously
+   (immediately after the previous one is completed).
 
 2. The pattern is described using C++, but it can be implemented as well in every 
    language with garbage collection.
-   In C++ `std::shared_ptr` is needed to be sure a `Snapshot` is deleted when no client is using it
+   In C++ `std::shared_ptr` is needed to ensure that a `Snapshot` is deleted when no client is using it
    and `Source` has a more updated snapshot ready.
    In a language with garbage collection, the collector will take care of deleting old snapshots
    when they're no more used (unfortunately at some unspecified time so that we can have many unused snapshots in memory).
@@ -327,7 +350,7 @@ Code fragments that illustrate how you might implement the pattern in
 C++ or Smalltalk.
 -->
 
-The C++ code shown here sketches the implementation of the PATTERNNAME (TODO)
+The C++ code shown here sketches the implementation of the Flip Model
 classes in the Motivation section.
 
 ```c++
@@ -396,7 +419,7 @@ Examples of the pattern found in real systems. We include at least two
 examples from different domains.
 -->
 
-PATTERNNAME (TODO) is used
+Flip Model is used
 to retrieve the periodic diagnostic of network objects
 in several applications I worked on.
  
@@ -410,12 +433,12 @@ What design patterns are closely related to this one? What are the
 important differences? With which other patterns should this one be used?
 -->
 
-* The pattern is somewhat similar to "Double Buffer", but PATTERNNAME (TODO) 
+* The pattern is somewhat similar to "Double Buffer", but Flip Model
   allows multiple clients to read the state, each at its convenient pace.
-  Moreover, in PATTERNNAME (TODO) there can be multiple data structures simultaneously,
+  Moreover, in Flip Model there can be multiple data structures simultaneously,
   while in "Double buffer" we have always two buffer
   (one for writing and the other for reading).
-  Finally, in "Double Buffer" the buffer are *swapped*, while in PATTERNNAME (TODO)
+  Finally, in "Double Buffer" the buffer are *swapped*, while in Flip Model
   the data structures are *passed* from the writer to the readers and, eventually,
   deleted.
 * `Snapshot` can/should be a "Façade" for a complex data structure.
