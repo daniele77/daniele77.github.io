@@ -7,49 +7,56 @@ tags: [C++]
 ---
 
 In my work, I often develop applications meant to run for a long period of time,
-without a classic interaction with the user (i.e., without a proper gui).
+without a classic interaction with the user (i.e., without a proper UI).
 Sometimes, they are applications that run in a server, sometimes in a custom board,
 but almost never they are desktop applications.
 Their other characteristic is that they're not CPU bound applications,
 i.e., they're not the kind of number crunching applications that you start
-and then you wait for an output.
+and then wait for an output.
 
-I soon found out that it's very useful to have some kind of console
+Soon enough, I realized that it's very useful to have some kind of console
 to interact with my applications, particularly the embedded kind,
 where the software is running around the clock,
-so you can easily monitor, configure and manage your system.
+so that you can easily monitor, configure and manage your system.
 
 Cisco routers have a command line interface, and so many devices that run unattended.
 
-If you're working on similar software, you should definitely considering adding
-a command line interface at least for debugging purpose. For example: it wouldn't
-be great if you could connect using a telnet client to your embedded software to
-ask the internal state, to view a dump of some internal structure, to
-change the log level at runtime, to change the working mode, to enable or disable some modules,
-to load or unload some plugin.
+If you're working on this kind of software, you should definitely considering adding
+a command line interface at least for debugging purpose.
+For example: it wouldn't be great connecting to your embedded software using a telnet client
+and ask the internal state, view a dump of some internal structure,
+modify the log level at runtime, change the working mode, enable or disable some modules,
+load or unload some plugin?
 
-When you're in production, the benefit of an interactive [possibly remote] command line is obvious.
-But consider also at the initial phases of development. When you're writing the first prototype of
-a I/O bound application [### trovare il giusto termine. in questo caso reactive system sarebbe meglio].
-Chances are that you start writing some core features,
-some protocol, some module that does IO, just to speak with the real world.
+When you're in production, the benefit of an interactive (and possibly remote) command line is obvious.
+But consider the initial phases of development, too.
+When you're writing the first prototype of
+an application doing I/O on custom devices,
+<!-- a I/O bound application [### trovare il giusto termine. in questo caso reactive system sarebbe meglio]. -->
+chances are that you start writing some core features to speak with the real word:
+some protocol, some module that does I/O, ...
 How do you test it? You can write a `main` that drives your piece of software,
-but usually you need some FSM... or a more interactive solution :-)
+but usually you need some sort of FSM to interact correctly with the hardware.
+Either that, or a more interactive solution :-)
 
 Let's imagine: you're writing your protocol stack to speak with a legacy machine. You've got
-primitives to tell the machine to start the electric motor, to stop it, to change direction, and
-the notifies for meaningful events. You can insert in your `main` a command line interface,
-and plug the various primitives to its commands. So you can start to test
-use cases complex at will on your module, in an incremental manner (well,
-this requires also to be able to write incremental modular code, but this is
+primitives to tell the machine to start the electric motor, to stop it, to change direction
+as well as the notifies for meaningful events.
+Now you can insert in your `main` function a command line interface,
+and register a command for each primitive.
+In this way you can start to test use cases complex at will on your module,
+in an incremental manner
+(of course this requires also to be able to write incremental modular code, but this is
 a subject for another post :-).
+
+## Reinventing the whell, as usual...
 
 As every good developer, when I need something, I start by looking at open source libraries,
 to see if there is something that works for me. Unfortunately, I couldn't find anything
 completely fitting my needs. In particular, the vast majority of libraries available
-worked only on linux, or they weren't libraries at all, but applications
+work only on linux, or they aren't libraries at all, but applications
 in which you have to hook external programs to commands. None of them
-provide remote sessions. Few were written in C++, none of them in modern C++.
+provides remote sessions. Few are written in C++, none of them in modern C++.
 
 Eventually, I wrote my own library, in C++14. It's available on my github page,
 [here](https://github.com/daniele77/cli). It has production code quality,
@@ -66,7 +73,7 @@ A brief summary of features:
 * Colors
 
 It has a dependency from `boost::asio` to provide an asynchronous interface
-(in case you want keep single threaded)
+(when you want a single thread application)
 and to implement the telnet server.
 
 That's all I needed for my projects. When I have a remote board running my software,

@@ -11,9 +11,9 @@ working on applications for the diagnostic of complex distributed systems.
 
 Since this solution worked very well for me,
 and it's still proving robustness in many running systems,
-I thought it might be useful also to others,
+I thought it might be useful to others,
 and decided it could be worth formalizing it someway.
-After some research, I could not find in literature any reference
+After some research, I could not find in the literature any reference
 to a similar solution,
 and this finally convinced me to write this post.
 Of course, should you know it is already described somewhere, please let me know.
@@ -35,7 +35,7 @@ is still the only solution to dominate complexity.
 I decided to document it under the well-known form of a *design pattern*
 because I believe that it's still a convenient form to discuss *Software Design* (and primarily *Architectural Design*) that
 -- whatever people may say --
-are always fundamental topics.
+are fundamental topics.
 
 <!--
 (topics that lately have been a little bit neglected,
@@ -69,12 +69,12 @@ but this is another story, for another blog post)
 I hope reading this post is enough to make them curious about the subject.
 -->
 
-So, let's start with the pattern subject of this post:
+Anyway, without further ado, let's start with the pattern I want to introduce in this post:
 I will describe it using the classic documentation format
 proposed in the GoF book
-(See 
-http://en.wikipedia.org/wiki/Software_design_pattern#Documentation
-or -- even better -- read the book! :-). 
+(see
+[the Wikipedia article](http://en.wikipedia.org/wiki/Software_design_pattern#Documentation)
+or -- even better -- read the book! :-).
 
 <!--
 
@@ -149,7 +149,7 @@ Consider for example an application that periodically retrieves data from a larg
 to perform some kind of statistical elaboration on the 
 collected data set and send alarms when some criteria are met.
 The data collected from the sensor network is structured in a complex lattice of objects
-resembling the ones you would find in the physical world,
+resembling the ones you would find in the physical world
 so that the elaboration modules can navigate
 the data in a more natural way.
 The retrieval operation is a complex long task, involving several network protocols,
@@ -186,7 +186,7 @@ substitutes `current` with `filling` when the acquisition is completed.
 When a client needs to perform some task on the data acquired,
 it asks `SensorNetwork` that returns `current` (i.e., the most recent data acquired).
 An object of class `SensorAcquisition` is granted to remain in life
-and not change for all the time a client holds the smart pointer
+and unchanged during the whole time a client holds the smart pointer
 (and the same is still valid in garbage collected languages).
 
 <!--
@@ -199,7 +199,7 @@ and its reading (performed by the various clients: `Statistics`, `ThresholdMonit
 are possibly performed in multiple threads.
 The safety of the code is granted by:
 
-1. a `SensorAcquisition` can be modified only by the thread of `SensorNetwork`,
+1. a `SensorAcquisition` object can be modified only by the thread of `SensorNetwork`,
    and never changed after it becomes public (i.e., the smart-pointers `current` is
    substitute by `filling`)
 2. the smart pointer exchange is protected by a mutex.
@@ -221,7 +221,7 @@ Use Flip Model when
 * you have a complex data structure slow to update.
 * Its clients must asynchronously read the most updated data available
   in a consistent fashion.
-* The old data must be discarded when is no longer needed.
+* Older data must be discarded when is no longer needed.
 
 ## Structure
 
@@ -286,12 +286,10 @@ let you vary independently?
 * occupazione di memoria ridotta al minimo indispensabile per garantire che ogni consumatore abbia accesso coerente allo snapshot più recente disponibile.
 -->
 
-TODO: CONTROLLARE
-
 * Flip Model decouples the producer from the readers:
   the producer can go on with the update of the data (slow)
   and each reader gets each time the most updated version.
-* Synchronization. Producer and readers can run in different threads.
+* Synchronization: producer and readers can run in different threads.
 * Flip Model grants the coherence of all the data structures that are
   read in a given instant from a reader, without locks taken for long times.
 * Memory consumption to the bare minimum to grant that every reader
@@ -343,7 +341,7 @@ Here are 8 issues to consider when implementing the Flip Model pattern:
    must be substituted by a reference counted pool object handler).
 
 7. Please note that `Snapshot` (and the classes it represents) is immutable.
-   After its creation (and after the scan is completed), the clients can only read it.
+   After its creation and the scan is completed, the clients can only read it.
    When a new snapshot is available, the old one is deleted and the clients will read the new one.
    This is a big advantage from the concurrency point of view: multiple clients in different threads
    can read the same snapshot without locks.
@@ -433,9 +431,7 @@ examples from different domains.
 Flip Model is used
 to retrieve the periodic diagnostic of network objects
 in several applications I worked on.
- 
 Unfortunately, I cannot reveal the details due to the usual confidentiality constraints.
-
 
 ## Related Patterns
 
@@ -447,7 +443,7 @@ important differences? With which other patterns should this one be used?
 * The pattern is somewhat similar to
   "[Double Buffer](http://gameprogrammingpatterns.com/double-buffer.html)",
   but Flip Model allows multiple clients to read the state, each at its convenient pace.
-  Moreover, in Flip Model there can be multiple data structures simultaneously,
+  Moreover, in Flip Model, there can be multiple data structures simultaneously,
   while in "Double buffer" we have always two buffer
   (one for writing and the other for reading).
   Finally, in "Double Buffer" buffers are *swapped*, while in Flip Model
