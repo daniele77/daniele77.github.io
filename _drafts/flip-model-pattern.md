@@ -6,27 +6,19 @@ category: general
 tags: [design, C++]
 ---
 
-More than once, designing a specific kind of applications,
-I used a certain object structure that helped me to solve
-smartly enough the situation.
-<!--
-During the design phase of a specific kind of applications,
-several times I've encountered similar situations,
-and approached it using the same object structure every time,
-with some slight adjustment.
--->
-<!-- There is a solution that I used several times in my applications, under specific circumstances. -->
+There is a design solution that I have used several times in the last few years,
+working on applications for the diagnostic of complex distributed systems.
 
 Since this solution worked very well for me,
-and it's still proving robustness in many production systems,
-I thought it might be useful to others
-(and, anyway, I think it's always worth formalizing a problem/solution even 
-when others are already using it).
-
-After some research, I could not find any reference to a such solution in literature,
+and it's still proving robustness in many running systems,
+I thought it might be useful also to others,
+and decided it could be worth formalizing it someway.
+After some research, I could not find in literature any reference
+to a similar solution,
 and this finally convinced me to write this post.
-But if you know it is already documented and formalized somewhere, please let me know.
+Of course, should you know it is already described somewhere, please let me know.
 
+<!--
 Being a structure that solves specific software forces, I decided to document it under the well-known form of a *design pattern*.
 First of all, because it is exactly that:
 a *pattern* (meaning something we encounter often)
@@ -38,6 +30,25 @@ Unfortunately, it seems "modern C++" community prefers to focus on "micro design
 but I hope that C++ [application] developers know best,
 and be aware that thinking about the shape of their programs
 is still the only solution to dominate complexity.
+-->
+
+I decided to document it under the well-known form of a *design pattern*
+because I believe that it's still a convenient form to discuss *Software Design* (and primarily *Architectural Design*) that
+-- whatever people may say --
+are always fundamental topics.
+
+<!--
+(topics that lately have been a little bit neglected,
+especially from the "modern C++" community, in favor
+of "micro design")
+
+These topics are maybe out of fashion now, 
+
+Unfortunately, it seems "modern C++" community prefers to focus on "micro design" instead,
+but I hope that C++ [application] developers know best,
+and be aware that thinking about the shape of their programs
+is still the only solution to dominate complexity.
+-->
 
 <!--
 Besides, 
@@ -47,8 +58,8 @@ Be careful: I mean exactly "Software Design", not *micro design*,
 that sadly happen to be the aspect on which nowadays C++ gurus focus most.
 -->
 
-Besides, some young developers might not know the book "Design Patterns",
-so I hope reading this post can help to make them curious about
+Furthermore, some young developers might not know the book "Design Patterns",
+so I hope that this post makes them curious about
 patterns and design in general.
 
 <!--
@@ -59,8 +70,8 @@ I hope reading this post is enough to make them curious about the subject.
 -->
 
 So, let's start with the pattern subject of this post:
-I will describe it using the documentation format
-used in the GoF book
+I will describe it using the classic documentation format
+proposed in the GoF book
 (See 
 http://en.wikipedia.org/wiki/Software_design_pattern#Documentation
 or -- even better -- read the book! :-). 
@@ -433,15 +444,20 @@ What design patterns are closely related to this one? What are the
 important differences? With which other patterns should this one be used?
 -->
 
-* The pattern is somewhat similar to "Double Buffer", but Flip Model
-  allows multiple clients to read the state, each at its convenient pace.
+* The pattern is somewhat similar to
+  "[Double Buffer](http://gameprogrammingpatterns.com/double-buffer.html)",
+  but Flip Model allows multiple clients to read the state, each at its convenient pace.
   Moreover, in Flip Model there can be multiple data structures simultaneously,
   while in "Double buffer" we have always two buffer
   (one for writing and the other for reading).
-  Finally, in "Double Buffer" the buffer are *swapped*, while in Flip Model
-  the data structures are *passed* from the writer to the readers and, eventually,
+  Finally, in "Double Buffer" buffers are *swapped*, while in Flip Model
+  the data structures are *passed* from the writer to the readers and eventually
   deleted.
-* `Snapshot` can/should be a "Façade" for a complex data structure.
-* `Source` can use a "Strategy" to change the policy of update (e.g., periodic VS continuous).
+* `Snapshot` can/should be a 
+  "[Façade](http://en.wikipedia.org/wiki/Facade_pattern)"
+  for a complex data structure.
+* `Source` can use a 
+  "[Strategy](http://en.wikipedia.org/wiki/Strategy_pattern)"
+  to change the policy of update (e.g., periodic VS continuous).
 
 ----
