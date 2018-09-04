@@ -9,22 +9,24 @@ tags: [C++]
 In my work, I often develop applications meant to run for a long period of time,
 without a classic interaction with the user (i.e., without a proper UI).
 Sometimes, they are applications that run in a server, sometimes in a custom board,
-but almost never they are desktop applications.
+but they are almost never desktop applications.
 Their other characteristic is that they're not CPU bound applications,
 i.e., they're not the kind of number crunching applications that you start
 and then wait for an output.
 
-Soon enough, I realized that it's very useful to have some kind of console
+Soon enough, I realized that it's very useful to have some sort of console
 to interact with my applications, particularly the embedded kind,
 where the software is running around the clock,
 so that you can easily monitor, configure and manage your system.
-
-Cisco routers have a command line interface, and so many devices that run unattended.
+<!-- Cisco routers, for example, have a command line interface, and so many devices that run unattended. -->
+After all, this idea is nothing new:
+Cisco routers, for example, are known for their command line interface,
+and the same goes for many devices that run unattended.
 
 If you're working on this kind of software, you should definitely considering adding
 a command line interface at least for debugging purpose.
 For example: it wouldn't be great connecting to your embedded software using a telnet client
-and ask the internal state, view a dump of some internal structure,
+to ask the internal state, view a dump of some internal structure,
 modify the log level at runtime, change the working mode, enable or disable some modules,
 load or unload some plugin?
 
@@ -33,37 +35,39 @@ But consider the initial phases of development, too.
 When you're writing the first prototype of
 an application doing I/O on custom devices,
 <!-- a I/O bound application [### trovare il giusto termine. in questo caso reactive system sarebbe meglio]. -->
-chances are that you start writing some core features to speak with the real word:
-some protocol, some module that does I/O, ...
-How do you test it? You can write a `main` that drives your piece of software,
-but usually you need some sort of FSM to interact correctly with the hardware.
-Either that, or a more interactive solution :-)
+chances are that you start writing some core features to communicate with the real word:
+some protocol, some module that does I/O, and so on.
+How do you test them? You can write a `main` that drives your piece of software
+but, except for simple cases, you also need some sort of state machine to interact correctly with the hardware.
+So, either you develop a state machine... or you use a more interactive solution :-)
 
 Let's imagine: you're writing your protocol stack to speak with a legacy machine. You've got
 primitives to tell the machine to start the electric motor, to stop it, to change direction
-as well as the notifies for meaningful events.
+as well as the notifications for meaningful events.
 Now you can insert in your `main` function a command line interface,
 and register a command for each primitive.
-In this way you can start to test use cases complex at will on your module,
+In this way you can begin immediately to test use cases complex at will on your module,
 in an incremental manner
 (of course this requires also to be able to write incremental modular code, but this is
 a subject for another post :-).
 
 ## Reinventing the whell, as usual...
 
-As every good developer, when I need something, I start by looking at open source libraries,
+So, I needed a CLI for my C++ projects.
+As every good developer, when I need something, I first start by looking at open source libraries,
 to see if there is something that works for me. Unfortunately, I couldn't find anything
 completely fitting my needs. In particular, the vast majority of libraries available
 work only on linux, or they aren't libraries at all, but applications
 in which you have to hook external programs to commands. None of them
 provides remote sessions. Few are written in C++, none of them in modern C++.
 
-Eventually, I wrote my own library, in C++14. It's available on my github page,
-[here](https://github.com/daniele77/cli). It has production code quality,
+Eventually, I wrote my own library, in C++14. It's available on my
+[github page](https://github.com/daniele77/cli). It has production code quality,
 and has been used in several industrial projects.
 
 A brief summary of features:
 
+* C++14
 * Cross-platform (linux and windows tested)
 * Menus and submenus
 * Remote sessions (telnet)
@@ -76,13 +80,171 @@ It has a dependency from `boost::asio` to provide an asynchronous interface
 (when you want a single thread application)
 and to implement the telnet server.
 
-That's all I needed for my projects. When I have a remote board running my software,
-[@@@ in campo, lontana etc. etc], I find it very handy to telnet on a specific port
+The library is all I needed for my projects. When I have a remote board running my software,
+I find it very handy to telnet on a specific port
 of the board to get a shell on my application. I can have a look at the internal
 state of the software, increase the log level when something strange happens,
-even give commands to [@@@]. @@@
+even give commands to change the behaviour or reset the state if something goes wrong.
 
-The `cli` library can have several uses, besides the remote supervision of embedded software.
+## Show me some code!
+
+Just to show you the syntax of the library, this is an example of a working
+application providing both a local prompt and a remote command line interface,
+with menu and submenus:
+
+```c++
+#include "cli/clilocalsession.h"
+#include "cli/remotecli.h"
+#include "cli/cli.h"
+
+using namespace cli;
+using namespace std;
+
+int main()
+{
+    // setup cli
+
+    auto rootMenu = make_unique< Menu >( "cli" );
+    rootMenu -> Add(
+            "hello",
+            [](std::ostream& out){ out << "Hello, world\n"; },
+            "Print hello world" );
+    rootMenu -> Add(
+            "hello_everysession",
+            [](std::ostream&){ Cli::cout() << "Hello, everybody" << std::endl; },
+            "Print hello everybody on all open sessions" );
+    rootMenu -> Add(
+            "answer",
+            [](int x, std::ostream& out){ out << "The answer is: " << x << "\n"; },
+            "Print the answer to Life, the Universe and Everything " );
+    rootMenu -> Add(
+            "color",
+            [](std::ostream& out){ out << "Colors ON\n"; SetColor(); },
+            "Enable colors in the cli" );
+    rootMenu -> Add(
+            "nocolor",
+            [](std::ostream& out){ out << "Colors OFF\n"; SetNoColor(); },
+            "Disable colors in the cli" );
+
+    auto subMenu = make_unique< Menu >( "sub" );
+    subMenu -> Add(
+            "hello",
+            [](std::ostream& out){ out << "Hello, submenu world\n"; },
+            "Print hello world in the submenu" );
+    subMenu -> Add(
+            "demo",
+            [](std::ostream& out){ out << "This is a sample!\n"; },
+            "Print a demo string" );
+
+    auto subSubMenu = make_unique< Menu >( "subsub" );
+        subSubMenu -> Add(
+            "hello",
+            [](std::ostream& out){ out << "Hello, subsubmenu world\n"; },
+            "Print hello world in the sub-submenu" );
+    subMenu -> Add( std::move(subSubMenu));
+
+    rootMenu -> Add( std::move(subMenu) );
+
+    Cli cli( std::move(rootMenu) );
+    // global exit action
+    cli.ExitAction( [](auto& out){ out << "Goodbye and thanks for all the fish.\n"; } );
+
+    boost::asio::io_service ios;
+
+    // setup local session (gives an application prompt)
+
+    CliLocalTerminalSession localSession(cli, ios, std::cout, 200);
+    localSession.ExitAction(
+        [&ios](auto& out) // session exit action
+        {
+            out << "Closing App...\n";
+            ios.stop();
+        }
+    );
+
+    // setup server (for telnet sessions on port 5000)
+
+    CliTelnetServer server(ios, 5000, cli);
+    // exit action for all the connections
+    server.ExitAction( [](auto& out) { out << "Terminating this session...\n"; } );
+    ios.run();
+
+    return 0;
+}
+```
+
+If you don't need the remote console and it's enough a synchronous application,
+you can simplify the setup and get rid of `boost asio`:
+
+```c++
+#include "cli/cli.h"
+#include "cli/clifilesession.h"
+
+using namespace cli;
+using namespace std;
+
+
+int main()
+{
+    // setup cli
+
+    auto rootMenu = make_unique< Menu >( "cli" );
+    rootMenu -> Add(
+            "hello",
+            [](std::ostream& out){ out << "Hello, world\n"; },
+            "Print hello world" );
+    rootMenu -> Add(
+            "hello_everysession",
+            [](std::ostream&){ Cli::cout() << "Hello, everybody" << std::endl; },
+            "Print hello everybody on all open sessions" );
+    rootMenu -> Add(
+            "answer",
+            [](int x, std::ostream& out){ out << "The answer is: " << x << "\n"; },
+            "Print the answer to Life, the Universe and Everything " );
+    rootMenu -> Add(
+            "color",
+            [](std::ostream& out){ out << "Colors ON\n"; SetColor(); },
+            "Enable colors in the cli" );
+    rootMenu -> Add(
+            "nocolor",
+            [](std::ostream& out){ out << "Colors OFF\n"; SetNoColor(); },
+            "Disable colors in the cli" );
+
+    auto subMenu = make_unique< Menu >( "sub" );
+    subMenu -> Add(
+            "hello",
+            [](std::ostream& out){ out << "Hello, submenu world\n"; },
+            "Print hello world in the submenu" );
+    subMenu -> Add(
+            "demo",
+            [](std::ostream& out){ out << "This is a sample!\n"; },
+            "Print a demo string" );
+
+    auto subSubMenu = make_unique< Menu >( "subsub" );
+        subSubMenu -> Add(
+            "hello",
+            [](std::ostream& out){ out << "Hello, subsubmenu world\n"; },
+            "Print hello world in the sub-submenu" );
+    subMenu -> Add( std::move(subSubMenu));
+
+    rootMenu -> Add( std::move(subMenu) );
+
+
+    Cli cli( std::move(rootMenu) );
+    // global exit action
+    cli.ExitAction( [](auto& out){ out << "Goodbye and thanks for all the fish.\n"; } );
+
+    CliFileSession input(cli);
+    input.Start();
+
+    return 0;
+}
+```
+
+## Just for embedded?
+
+The `cli` library has several uses, besides the remote supervision of embedded software.
 It can be a console for UI-less applications, like game servers;
-as a way to configure network devices,
-or be useful to test library code.
+as a way to configure network devices;
+a flexible tool to test library code.
+You can put a CLI basically in every application: sooner or later, it will come in handy.
