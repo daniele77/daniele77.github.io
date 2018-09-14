@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "An interactive command line interface for your applications"
+title: "Add an interactive command line to your applications"
 published: true
 category: general
 tags: [C++]
@@ -8,14 +8,14 @@ tags: [C++]
 
 In my work, I often develop applications meant to run for a long period of time,
 without a classic interaction with the user (i.e., without a proper UI).
-Sometimes, they are applications that run in a server, sometimes in a custom board,
+Sometimes, they are applications running on a server, sometimes in a custom board,
 but they are almost never desktop applications.
 Their other characteristic is that they're not CPU bound applications,
 i.e., they're not the kind of number crunching applications that you start
 and then wait for an output.
 
 Soon enough, I realized that it's very useful to have some sort of console
-to interact with my applications, particularly the embedded kind,
+to interact with my applications, particularly the embedded kind
 where the software is running around the clock,
 so that you can easily monitor, configure and manage your system.
 <!-- Cisco routers, for example, have a command line interface, and so many devices that run unattended. -->
@@ -23,52 +23,53 @@ After all, this idea is nothing new:
 Cisco routers, for example, are known for their command line interface,
 and the same goes for many devices that run unattended.
 
-If you're working on this kind of software, you should definitely considering adding
+If you're working on this kind of software, you should definitely consider adding
 a command line interface at least for debugging purpose.
-For example: it wouldn't be great connecting to your embedded software using a telnet client
+For example wouldn't it be great connecting to your embedded software using a telnet client
 to ask the internal state, view a dump of some internal structure,
 modify the log level at runtime, change the working mode, enable or disable some modules,
 load or unload some plugin?
 
-When you're in production, the benefit of an interactive (and possibly remote) command line is obvious.
+When you're in production, the benefits of an interactive (and possibly remote) command line are obvious.
 But consider the initial phases of development, too.
 When you're writing the first prototype of
 an application doing I/O on custom devices,
 <!-- a I/O bound application [### trovare il giusto termine. in questo caso reactive system sarebbe meglio]. -->
 chances are that you start writing some core features to communicate with the real word:
-some protocol, some module that does I/O, and so on.
-How do you test them? You can write a `main` that drives your piece of software
+implementing some protocol, some module that does I/O, and so on.
+How do you test them? You can write a `main` function that drives your piece of software
 but, except for simple cases, you also need some sort of state machine to interact correctly with the hardware.
-So, either you develop a state machine... or you use a more interactive solution :-)
+So, either you develop a state machine or you use a more interactive solution.
+A CLI, for example :-)
 
 Let's imagine: you're writing your protocol stack to speak with a legacy machine. You've got
 primitives to tell the machine to start the electric motor, to stop it, to change direction
-as well as the notifications for meaningful events.
-Now you can insert in your `main` function a command line interface,
+as well as the notifications for all the meaningful events.
+Now you can add to your `main` function a command line interface,
 and register a command for each primitive.
-In this way you can begin immediately to test use cases complex at will on your module,
+In this way you can immediately begin to test use cases complex at will on your module,
 in an incremental manner
-(of course this requires also to be able to write incremental modular code, but this is
-a subject for another post :-).
+(of course this requires to be able to write incremental modular code too,
+but this is a subject for another post :-).
 
-## Reinventing the whell, as usual...
+## Reinventing the wheel, as usual...
 
 So, I needed a CLI for my C++ projects.
-As every good developer, when I need something, I first start by looking at open source libraries,
-to see if there is something that works for me. Unfortunately, I couldn't find anything
-completely fitting my needs. In particular, the vast majority of libraries available
-work only on linux, or they aren't libraries at all, but applications
+As every good developer, when I need something, I first start by looking at open source libraries
+to see if there exists something that works for me. Unfortunately, I couldn't find anything
+that completely fit my needs. In particular, the vast majority of libraries available
+work only on Linux, or they aren't libraries at all, but applications
 in which you have to hook external programs to commands. None of them
-provides remote sessions. Few are written in C++, none of them in modern C++.
+provides remote sessions. Few are written in C++. None of them in modern C++.
 
-Eventually, I wrote my own library, in C++14. It's available on my
-[github page](https://github.com/daniele77/cli). It has production code quality,
+Eventually, I wrote my own library, in C++14. It's available on 
+[my GitHub page](https://github.com/daniele77/cli). It has production code quality
 and has been used in several industrial projects.
 
 A brief summary of features:
 
 * C++14
-* Cross-platform (linux and windows tested)
+* Cross-platform (Linux and windows tested)
 * Menus and submenus
 * Remote sessions (telnet)
 * Command history (navigation with arrow keys)
@@ -77,20 +78,20 @@ A brief summary of features:
 * Colors
 
 It has a dependency from `boost::asio` to provide an asynchronous interface
-(when you want a single thread application)
+(for those cases when you want a single thread application)
 and to implement the telnet server.
 
 The library is all I needed for my projects. When I have a remote board running my software,
 I find it very handy to telnet on a specific port
 of the board to get a shell on my application. I can have a look at the internal
 state of the software, increase the log level when something strange happens,
-even give commands to change the behaviour or reset the state if something goes wrong.
+even give commands to change the behavior or reset the state if something goes wrong.
 
 ## Show me some code!
 
 Just to show you the syntax of the library, this is an example of a working
 application providing both a local prompt and a remote command line interface,
-with menu and submenus:
+with menus and submenus:
 
 ```c++
 #include "cli/clilocalsession.h"
@@ -111,19 +112,23 @@ int main()
             "Print hello world" );
     rootMenu -> Add(
             "hello_everysession",
-            [](std::ostream&){ Cli::cout() << "Hello, everybody" << std::endl; },
+            [](std::ostream&)
+                { Cli::cout() << "Hello, everybody" << std::endl; },
             "Print hello everybody on all open sessions" );
     rootMenu -> Add(
             "answer",
-            [](int x, std::ostream& out){ out << "The answer is: " << x << "\n"; },
-            "Print the answer to Life, the Universe and Everything " );
+            [](int x, std::ostream& out)
+                { out << "The answer is: " << x << "\n"; },
+            "Print the answer to Life, the Universe and Everything" );
     rootMenu -> Add(
             "color",
-            [](std::ostream& out){ out << "Colors ON\n"; SetColor(); },
+            [](std::ostream& out)
+                { out << "Colors ON\n"; SetColor(); },
             "Enable colors in the cli" );
     rootMenu -> Add(
             "nocolor",
-            [](std::ostream& out){ out << "Colors OFF\n"; SetNoColor(); },
+            [](std::ostream& out)
+                { out << "Colors OFF\n"; SetNoColor(); },
             "Disable colors in the cli" );
 
     auto subMenu = make_unique< Menu >( "sub" );
@@ -139,7 +144,8 @@ int main()
     auto subSubMenu = make_unique< Menu >( "subsub" );
         subSubMenu -> Add(
             "hello",
-            [](std::ostream& out){ out << "Hello, subsubmenu world\n"; },
+            [](std::ostream& out)
+                { out << "Hello, subsubmenu world\n"; },
             "Print hello world in the sub-submenu" );
     subMenu -> Add( std::move(subSubMenu));
 
@@ -147,7 +153,8 @@ int main()
 
     Cli cli( std::move(rootMenu) );
     // global exit action
-    cli.ExitAction( [](auto& out){ out << "Goodbye and thanks for all the fish.\n"; } );
+    cli.ExitAction( [](auto& out)
+        { out << "Goodbye and thanks for all the fish.\n"; } );
 
     boost::asio::io_service ios;
 
@@ -166,14 +173,15 @@ int main()
 
     CliTelnetServer server(ios, 5000, cli);
     // exit action for all the connections
-    server.ExitAction( [](auto& out) { out << "Terminating this session...\n"; } );
+    server.ExitAction( [](auto& out) 
+        { out << "Terminating this session...\n"; } );
     ios.run();
 
     return 0;
 }
 ```
 
-If you don't need the remote console and it's enough a synchronous application,
+If you don't need the remote console and a synchronous application is enough,
 you can simplify the setup and get rid of `boost asio`:
 
 ```c++
@@ -195,19 +203,22 @@ int main()
             "Print hello world" );
     rootMenu -> Add(
             "hello_everysession",
-            [](std::ostream&){ Cli::cout() << "Hello, everybody" << std::endl; },
+            [](std::ostream&)
+                { Cli::cout() << "Hello, everybody" << std::endl; },
             "Print hello everybody on all open sessions" );
     rootMenu -> Add(
             "answer",
-            [](int x, std::ostream& out){ out << "The answer is: " << x << "\n"; },
-            "Print the answer to Life, the Universe and Everything " );
+            [](int x, std::ostream& out)
+                { out << "The answer is: " << x << "\n"; },
+            "Print the answer to Life, the Universe and Everything" );
     rootMenu -> Add(
             "color",
             [](std::ostream& out){ out << "Colors ON\n"; SetColor(); },
             "Enable colors in the cli" );
     rootMenu -> Add(
             "nocolor",
-            [](std::ostream& out){ out << "Colors OFF\n"; SetNoColor(); },
+            [](std::ostream& out)
+                { out << "Colors OFF\n"; SetNoColor(); },
             "Disable colors in the cli" );
 
     auto subMenu = make_unique< Menu >( "sub" );
@@ -223,7 +234,8 @@ int main()
     auto subSubMenu = make_unique< Menu >( "subsub" );
         subSubMenu -> Add(
             "hello",
-            [](std::ostream& out){ out << "Hello, subsubmenu world\n"; },
+            [](std::ostream& out)
+                { out << "Hello, subsubmenu world\n"; },
             "Print hello world in the sub-submenu" );
     subMenu -> Add( std::move(subSubMenu));
 
@@ -232,7 +244,8 @@ int main()
 
     Cli cli( std::move(rootMenu) );
     // global exit action
-    cli.ExitAction( [](auto& out){ out << "Goodbye and thanks for all the fish.\n"; } );
+    cli.ExitAction( [](auto& out)
+        { out << "Goodbye and thanks for all the fish.\n"; } );
 
     CliFileSession input(cli);
     input.Start();
@@ -241,10 +254,13 @@ int main()
 }
 ```
 
-## Just for embedded?
+## Just for embedded applications?
 
-The `cli` library has several uses, besides the remote supervision of embedded software.
+Of course no.
+The `cli` library has several uses beyond
+the remote supervision of embedded software.
 It can be a console for UI-less applications, like game servers;
 as a way to configure network devices;
 a flexible tool to test library code.
+
 You can put a CLI basically in every application: sooner or later, it will come in handy.

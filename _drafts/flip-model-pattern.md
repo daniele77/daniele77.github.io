@@ -59,8 +59,7 @@ that sadly happen to be the aspect on which nowadays C++ gurus focus most.
 -->
 
 Furthermore, some young developers might not know the book "Design Patterns",
-so I hope that this post makes them curious about
-patterns and design in general.
+so I hope this post makes them curious about patterns and design in general.
 
 <!--
 Since the vast majority of young developers haven't read the book "Design Patterns"

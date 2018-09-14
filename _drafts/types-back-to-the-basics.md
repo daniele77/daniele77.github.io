@@ -25,7 +25,7 @@ Scaletta
 Lately, I had to choose a C++ library to use for an industrial product I'm working on.
 I found what it seemed the best fit (according to some constraint I had),
 however, some choices of the author left me bewildered about the library interface.
-And not just me, since in the issue tracker I found other suggestions to improve the interface.
+And not just me, since looking at the issue tracker I found other suggestions to improve the interface.
 
 Don't get me wrong: it's a good and useful modern C++ library, that does what it claims to do.
 I'm just using it as an example to make some considerations for a broader point of view.
@@ -49,7 +49,7 @@ msg.version = 11;
 
 and you understand immediately how it works.
 
-Everything's fine, then? Well yes, the library is usable, but the interface could be improved a bit,
+Everything's fine, then? Well yes, the library is usable, but the interface could be improved quite a bit,
 both in terms of readability and extensibility but, above all, to avoid bugs.
 
 I suggested using an `enum class` instead of an `int`. Something like that:
@@ -80,7 +80,7 @@ but he refused, replying:
 > adding identifiers. My intent is to keep this simple, without over-engineering when possible.
 
 Yes, I indeed think that 10 and 11 are so different from 1.0 and 1.1.
-And not because of the period between the two numbers,
+And not because of the dot between the two numbers,
 but rather because I think a numeric type (e.g., int) has a different meaning than a label.
 The author admits that he need a *label*, but I would rather not use an int for that purpose.
 <span style="background-color:yellow;">[elaborate]</span>
