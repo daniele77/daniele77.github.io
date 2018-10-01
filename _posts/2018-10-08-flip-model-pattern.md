@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Flip Model: a design pattern"
-published: true
+published: false
 category: general
 tags: [design, C++]
 ---
