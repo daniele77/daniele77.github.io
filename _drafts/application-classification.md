@@ -56,9 +56,9 @@ Esempi di queste applicazioni:
 - @@@
 
 Si noti che la classificazione precedente riguarda esclusivamente il tipo di problema,
-e non l'architettura usata dall'applicazione.
+e non l'architettura dell'applicazione.
 Un problema intrinsecamente sincrono può essere risolto con un'applicazione implementata ad eventi,
 o multithread,
 così come un problema intrinsecamente asincrono può essere risolto con una coda e un unico thread.
 
-Ovviamente, però, è vantaggioso allineare l'architettura del problema a quella dell'applicazione.
+Ovviamente, però, è vantaggioso allineare l'architettura del problema al tipo intrinseco dell'applicazione.

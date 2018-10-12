@@ -172,8 +172,8 @@ In the original solution, instead, testing is a bit more complicated...
 
 ### Reusability
 
-Maybe reusability is not on your priority list. You can always copy and paste the piece of code you need and then modify it. 
-After all, I did the same thing with the code above for a prototype I needed quickly. And it worked. Don't we all do the same 
+Maybe reusability is not on top of your priority list. You can always copy and paste the piece of code you need and then modify it.
+After all, I did the same thing with the code above for a prototype I needed quickly. And it worked. Don't we all do the same
 thing with Stack Overflow snippets? :-) So, what's the harm really?
 
 Well, maybe. But you're not considering the whole thing. Reusability across different projects is hard. You can write libraries 
