@@ -178,12 +178,12 @@ responsibilities.
 How the participants collaborate to carry out their responsibilities.
 -->
 
-* `Snapshot` creates a new `Source` instance, assigns it to the `shared_ptr` `filling`,
+* `Source` creates a new `Snapshot` instance, assigns it to the `shared_ptr` `filling`,
   and commands it to start the acquisition.
-* When the acquisition is terminated, `Snapshot` performs the assignment
+* When the acquisition is terminated, `Source` performs the assignment
   `current=filling` protected by a mutex.
-  If no clients were holding the previous `current`, the pointed `Source` is automatically destroyed (by the shared pointer).
-* When a client needs the most updated `Source`, it calls `Snapshot::GetLastSnapshot()`
+  If no clients were holding the previous `current`, the pointed `Snapshot` is automatically destroyed (by the shared pointer).
+* When a client needs the most updated `Snapshot`, it calls `Source::GetLastSnapshot()`
   that returns `current`.
 
 ![structure](/images/flip-pattern/collaboration.png)
