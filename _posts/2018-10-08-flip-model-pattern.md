@@ -125,7 +125,7 @@ However, If the presence of a mutex makes you feel back in the eighties, please 
 
 The following diagram shows a typical Flip Model class structure:
 
-![motivation](/images/swap-pattern/motivation.png)
+![motivation](/images/flip-pattern/motivation.png)
 
 ## Applicability
 
@@ -152,7 +152,7 @@ and collaborations between objects. Appendix B describes these notations
 in detail.
 -->
 
-![structure](/images/swap-pattern/structure.png)
+![structure](/images/flip-pattern/structure.png)
 
 ## Participants
 
@@ -186,7 +186,7 @@ How the participants collaborate to carry out their responsibilities.
 * When a client needs the most updated `Source`, it calls `Snapshot::GetLastSnapshot()`
   that returns `current`.
 
-![structure](/images/swap-pattern/collaboration.png)
+![structure](/images/flip-pattern/collaboration.png)
 
 ## Consequences
 
