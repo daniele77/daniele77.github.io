@@ -10,20 +10,25 @@ In the last few years, the compilation times of C++ projects increased dramatica
 in spite of the availability of fast computers with multiple CPU/cores and more RAM.
 
 This is to a large extent due to:
+
 - the fact that some elaboration moved from
-run-time to compile-time through templates and `constexpr`,
+  run-time to compile-time through templates and `constexpr`,
 - the increasing number of header-only libraries.
 
 Although the first is unavoidable (and in fact it's desirable),
 the second is a questionable trend
 usually only motivated by the convenience of distributing a header-only library
 rather than providing a compilation mechanism whatsoever.
-I admit I'm myself guilty to have developed a few header-only libraries,
-that's why I won't address this issue here :-)
+Since I'm myself guilty to have developed a few header-only libraries, however,
+I won't address this issue here :-)
 
 In some cases, build times can be reduced taking advantage of appropriate techniques,
-such as using better modularity, the pimpl idiom, 
-forward declarations, precompiled headers, turning off optimizations
+such as
+improving modularity,
+turning off optimizations,
+using the *pimpl* idiom,
+forward declarations,
+precompiled headers,
 and so on.
 
 In addition, C++11 introduced *extern template declarations* 
@@ -36,7 +41,6 @@ and tells the compiler not to instantiate the template in the current translatio
 
 The simplest way to figure out how extern template declarations work
 is to reason over a snippet of code.
-
 Consider these files:
 
 ```c++
@@ -49,7 +53,6 @@ void BigFunction()
     // body
 }
 
-
 ///////////////////////////////
 // f1.cpp
 
@@ -60,7 +63,6 @@ void f1()
     ...
     BigFunction<int>();
 }
-
 
 ///////////////////////////////
 // f2.cpp
@@ -88,7 +90,7 @@ f2.o
 ```
 -->
 
-```
+```shell
 > nm -g -C --defined-only *.o
 
 f1.o:
@@ -117,7 +119,6 @@ void BigFunction()
     // body
 }
 
-
 ///////////////////////////////
 // f1.cpp
 
@@ -128,7 +129,6 @@ void f1()
     ...
     BigFunction<int>();
 }
-
 
 ///////////////////////////////
 // f2.cpp
@@ -157,7 +157,7 @@ f2.o
 ```
 -->
 
-```
+```shell
 > nm -g -C --defined-only *.o
 
 f1.o:
@@ -180,7 +180,6 @@ class BigClass
     // implementation
 };
 
-
 ///////////////////////////////
 // f1.cpp
 
@@ -191,7 +190,6 @@ void f1()
     ...
     BigClass<int> bc;
 }
-
 
 ///////////////////////////////
 // f2.cpp
@@ -207,7 +205,7 @@ void f2()
 }
 ```
 
-## Linking problems
+## Something missing
 
 Unfortunately, it's not that simple.
 
@@ -226,10 +224,10 @@ If you're using gcc, you can verify that the problem is caused by
 the inline expansion of the function:
 -->
 
-You can verify that the issue here is the inline expansion of the function
-using `nm` to check again the symbols exported by the object files:
+You can use `nm` to check again the symbols exported by the object files,
+and verify that the issue here is the inline expansion of the function:
 
-```
+```shell
 > nm -g -C --defined-only *.o
 
 f1.o:
@@ -242,7 +240,7 @@ f2.o:
 in `f1.o` the symbol is missing because of the optimization,
 while in `f2.o` the symbol is missing because of the `extern` clause.
 
-If you’re using gcc, you can get further evidence by trying:
+If you’re using gcc, you can get further evidence of this by trying:
 
 ```c++
 // bigfunction.h
@@ -256,11 +254,11 @@ void __attribute__ ((noinline)) BigFunction()
 
 Here, the gcc-specific attribute `noinline` prevents the compiler to
 expand the function inline,
-so that the linker can find its code and does not complain anymore.
+so that the linker can find it and does not complain anymore.
 
 ## A global strategy
 
-The gcc-specific attribute `noinline` is obviously not the 
+The gcc-specific attribute `noinline` is obviously not the
 final solution to our problem.
 
 A point worth noting here is that the strategy to reduce compilation time
@@ -294,7 +292,6 @@ extern template void BigFunction<int>();
 
 template void BigFunction<int>();
 
-
 ///////////////////////////////
 // f1.cpp
 
@@ -305,7 +302,6 @@ void f1()
     ...
     BigFunction<int>();
 }
-
 
 ///////////////////////////////
 // f2.cpp
@@ -321,7 +317,7 @@ void f2()
 
 Please note that the solution still applies
 when the template function/class is part of a third-party library:
-in that case it's enough to add your own header file
+in that case, it's enough to add your own header file
 including the library that adds the extern template clause.
 
 ```c++
@@ -334,7 +330,6 @@ void BigFunction()
     // body
 }
 
-
 ///////////////////////////////
 // bigfunction.h
 
@@ -342,14 +337,12 @@ void BigFunction()
 
 extern template void BigFunction<int>();
 
-
 ///////////////////////////////
 // bigfunction.cpp
 
 #include "bigfunction.h"
 
 template void BigFunction<int>();
-
 
 ///////////////////////////////
 // f1.cpp
@@ -361,7 +354,6 @@ void f1()
     ...
     BigFunction<int>();
 }
-
 
 ///////////////////////////////
 // f2.cpp
@@ -378,7 +370,8 @@ void f2()
 ## Summary
 
 Reducing compile times by using extern template is a project scope strategy.
-One should consider which are the [big] templates that are used in many translation units 
+One should consider which are the templates most expensive
+that are used in many translation units
 and find a way to tell the build system to compile it only one time.
 
 But let’s consider for a moment what we’ve done in the previous paragraph.
@@ -400,7 +393,7 @@ it will perform global optimizations (e.g., inlining) having visibility of the w
 Of course this, in turn, will slow down the build process, but you'll get
 your function template inlined but instantiated only once.
 
-Bottom line: as always, programming is a trade-off
+Bottom line: programming is always a trade-off between conflicting facets,
 and you should measure carefully whether a template function
 is slowing down your build (because e.g., it's instantiated with the same parameter in many compilation units)
 or your run-time execution (because e.g., it's called in just one location but in a tight loop)
@@ -410,9 +403,9 @@ After all, the observation *“premature optimization is the root of all evil”
 and the rule that immediately follows *“measure before optimize”*
 can also be applied to compile time.
 You can easily measure what happens to build times and run times
-after declaring `extern template` an item and decide accordingly.
+after declaring `extern template` an item and then choose accordingly.
 
-In the end, it is inevitable that we decide whether to optimize for compilation or execution.
+At the end of the day,
+it is inevitable that we decide whether to optimize for compilation or execution.
 After all, that's exactly what I wrote at the very beginning of this article:
-one method to speed up build time is to turn off optimizations :-)
-
+one of the methods to speed up build time is to turn off optimizations :-)
