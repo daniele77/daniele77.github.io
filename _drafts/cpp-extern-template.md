@@ -269,7 +269,7 @@ One strategy at the project scope to take advantage of the extern template
 mechanism while ensuring that all the code needed by the linker is generated
 might be the following:
 *include in every translation unit where the template appears
-a header file containing the clause `external template`,
+a header file containing the clause `extern template`,
 and add to the project a source file with the explicit instantiation.*
 
 ```c++
