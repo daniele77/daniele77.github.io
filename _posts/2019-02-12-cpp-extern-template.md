@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Reduce compilation times with extern template"
-published: false
+published: true 
 category: general
 tags: [C++]
 excerpt_separator: <!--more-->
