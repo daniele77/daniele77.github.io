@@ -4,6 +4,7 @@ title: "Flip Model: A Design Pattern"
 published: true
 category: general
 tags: [design, C++]
+excerpt_separator: <!--more-->
 ---
 
 *This article was originally published in the
@@ -14,6 +15,8 @@ tags: [design, C++]
 In this article, I describe a design solution that I have adopted several times in the past
 while working on applications for the diagnosis of complex distributed systems.
 This solution worked well in several contexts, and it’s still proving robust in many running systems.
+
+<!--more-->
 
 Although I know for sure it’s used by other developers, after some research I could not
 find any reference to it in the literature, and this finally convinced me to write about it.

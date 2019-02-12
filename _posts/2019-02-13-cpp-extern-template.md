@@ -1,13 +1,21 @@
 ---
 layout: post
 title: "Reduce compilation times with extern template"
-published: true
+published: false
 category: general
 tags: [C++]
+excerpt_separator: <!--more-->
 ---
+
+*I first wrote this post on [Simplify C++!](https://arne-mertz.de/){:target="_blank"},
+Arne Mertz’s blog on clean and maintainable C++.*
+
+----
 
 In the last few years, the compilation times of C++ projects increased dramatically,
 in spite of the availability of fast computers with multiple CPU/cores and more RAM.
+
+<!--more-->
 
 This is to a large extent due to:
 
@@ -31,8 +39,8 @@ forward declarations,
 precompiled headers,
 and so on.
 
-In addition, C++11 introduced *extern template declarations* 
-([n1448](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2003/n1448.pdf))
+In addition, C++11 introduced *extern template declarations*
+([n1448](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2003/n1448.pdf){:target="_blank"})
 that, to some extent, can help speed up compilation times.
 This is analogous to extern data declaration
 and tells the compiler not to instantiate the template in the current translation unit.
