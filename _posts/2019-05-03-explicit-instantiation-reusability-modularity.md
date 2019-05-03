@@ -1,14 +1,14 @@
 ---
 layout: post
-title: "Explicit template instantiation, reusability and modularity"
-published: false
+title: "Explicit template instantiation: reusability and modularity"
+published: true
 category: general
-tags: [C++]
+tags: [design, C++]
 ---
 
 In my [previous post]({{ site.baseurl }}{% post_url 2019-02-12-cpp-extern-template %}),
 I explained how to use the C++11 feature *extern template* to reduce compilation times
-when the same template instantiation pccurs in multiple source files.
+when the same template instantiation occurs in multiple source files.
 
 A few days ago, a reader of the blog asked me some recommendations on how to choose between
 external templates and explicit template instantiation in a source file.
@@ -115,7 +115,7 @@ So, this solution reduces the *reusability* of the template,
 in addition to make it *inextensible*.
 However, the *reusability* property is not completely lost,
 because sometimes templates are thought only for a predefined set of arguments
-(not often, to tell the truth).
+(not so often, to tell the truth).
 
 ## Choices, as usual
 
@@ -139,6 +139,6 @@ i.e., a design where a new requirement can be implemented
 by just adding/updating a single artifact (e.g., a single .cpp file).
 An "incremental design" brings additional positive properties
 that I will elaborate in a future post,
-but can't be achieved when
-the application has got a single center (the cpp file)
-entangled with an unstable, unbounded set (the template arguments).
+but cannot be achieved if
+*the application has got a single center (the cpp file)
+entangled with an unstable, unbounded set (the template arguments)*.
